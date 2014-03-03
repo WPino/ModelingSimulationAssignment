@@ -7,7 +7,7 @@ using System.Text;
 
 namespace LinkedList 
 {
-    public abstract class Event
+    public class Event
     {
         private int time;
 
@@ -54,8 +54,33 @@ namespace LinkedList
                 return false;
         }
 
+        public Event Add(Event newEvent)
+        {
+            if (this.CompareTo(newEvent) < 0)
+            {
+                newEvent.Next = this;
+                if (this.Prev != null)
+                {
+                    this.Prev.Next = newEvent;
+                    newEvent.Prev = this.Prev;
+                }
+                this.Prev = newEvent;
 
-        public abstract Event Add(Event newEvent);
-            
+                return newEvent;
+            }
+            else
+            {
+                if (this.Next != null)
+                {
+                    this.Next.Add(newEvent);
+                }
+                else
+                {
+                    this.Next = newEvent;
+                    newEvent.Prev = this;
+                }
+                return this;
+            }
+        }
     }
 }
