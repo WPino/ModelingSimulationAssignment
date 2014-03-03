@@ -151,7 +151,7 @@ namespace LinkedList
             p.InitialiseVariables();
             
 
-            EventList.eventList.ReadFromHead();
+            EventList.eventList.ReadFromHead(); 
 
 
             Console.ReadLine();
