@@ -11,6 +11,7 @@ namespace LinkedList
     {
         private int time;
 
+
         private Event next = null;
         private Event previous = null;
 
@@ -36,12 +37,14 @@ namespace LinkedList
             set { previous = value; }
         }
 
+
+        // only checking on time!!!
         public int CompareTo(Event e)
         {
             if (time < e.time)
                 return 1;
             else if (time == e.time)
-                return 0;
+                return 1;
             else
                 return -1;
         }
@@ -81,6 +84,11 @@ namespace LinkedList
                 }
                 return this;
             }
+        }
+
+        public virtual void PrintDetails()
+        {
+            Console.WriteLine("Generic base class event");
         }
     }
 }
