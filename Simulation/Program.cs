@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
+
+// new version :p
+
 namespace LinkedList
 {
 
