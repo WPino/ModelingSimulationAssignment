@@ -30,6 +30,7 @@ namespace LinkedList
         {
             if (IsEmpty())
             {
+               
                 headEvent = e;
                 endEvent = e;
                 length++;
@@ -45,8 +46,7 @@ namespace LinkedList
                 }
                 length++;
             }
-            
-            
+
         }
 
         public void ReadFromHead()
@@ -60,11 +60,13 @@ namespace LinkedList
             else
             {
                 Event tmp = headEvent;
+                Console.WriteLine(" ======== LINKED LIST ========");
                 for(int i = 0; i < length; i++)
                 {
-                    Console.WriteLine(tmp.Time);
+                    tmp.PrintDetails();
                     tmp = tmp.Next;
                 }
+                Console.WriteLine(" =============================");
                 
             }
         }
@@ -79,12 +81,13 @@ namespace LinkedList
             else
             {
                 Event tmp = endEvent;
+                Console.WriteLine(" ======== LINKED LIST ========");
                 for (int i = 0; i < length; i++)
 			    {
-			        Console.WriteLine(tmp.Time);
+			        tmp.PrintDetails();
                     tmp = tmp.Prev;
                 }
-                
+                Console.WriteLine(" =============================");
             }
         }
 

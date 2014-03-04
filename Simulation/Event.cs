@@ -11,7 +11,6 @@ namespace LinkedList
     {
         private int time;
 
-
         private Event next = null;
         private Event previous = null;
 
@@ -43,8 +42,6 @@ namespace LinkedList
         {
             if (time < e.time)
                 return 1;
-            else if (time == e.time)
-                return 1;
             else
                 return -1;
         }
@@ -59,7 +56,7 @@ namespace LinkedList
 
         public Event Add(Event newEvent)
         {
-            if (this.CompareTo(newEvent) < 0)
+            if (this.CompareTo(newEvent) <= 0)
             {
                 newEvent.Next = this;
                 if (this.Prev != null)

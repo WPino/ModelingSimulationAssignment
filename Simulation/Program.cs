@@ -305,25 +305,16 @@ namespace LinkedList
             Program p = new Program();
             //p.InitialiseVariables();
 
+            // Adding 4 dvd machine 1 finished (one for each machine 1) and check the linked list.
+
             DvdM1FinishedEvent m11Finished = new DvdM1FinishedEvent(1);
-            m11Finished.PrintDetails();
-            //Console.ReadLine();
-            Thread.Sleep(100);
-
+           
             DvdM1FinishedEvent m12Finished = new DvdM1FinishedEvent(2);
-            m12Finished.PrintDetails();
-            //Console.ReadLine();
-            Thread.Sleep(100);
-
+           
             DvdM1FinishedEvent m13Finished = new DvdM1FinishedEvent(3);
-            m13Finished.PrintDetails();
-            //Console.ReadLine();
-            Thread.Sleep(100);
-
+           
             DvdM1FinishedEvent m14Finished = new DvdM1FinishedEvent(4);
-            m14Finished.PrintDetails();
-            //Console.ReadLine();
-            Thread.Sleep(100);
+           
 
             EventList.eventList.ReadFromHead();
 

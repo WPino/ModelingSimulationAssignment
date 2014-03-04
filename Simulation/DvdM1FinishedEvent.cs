@@ -37,8 +37,10 @@ namespace LinkedList
             this.Time = PlanWhenEventFinished();
 
             // adding to the event list.
-            EventList.eventList.Add(this);
 
+            this.PrintDetails();
+            EventList.eventList.Add(this);
+            Console.WriteLine();
             // method to find time at which this event happens
             // and add to EventList.eventList
 	    }
@@ -47,9 +49,11 @@ namespace LinkedList
         // I am not using the proper data but random number (just for experimentations)
         public int PlanWhenEventFinished()
         {
+
+            // dont really know how this random number Generator works but it seems to do the job;
             Random rand = new Random();
-            double finished = rand.NextDouble();
-            return (int)(finished * 100);
+            int finished = rand.Next(Math.Abs(Guid.NewGuid().GetHashCode()) % 100);
+            return finished;
         }
 
 
