@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 
 
 // new version :p
@@ -310,13 +309,7 @@ namespace LinkedList
 
             // Adding 4 dvd machine 1 finished (one for each machine 1) and check the linked list.
 
-            DvdM1FinishedEvent m11Finished = new DvdM1FinishedEvent(1);
-           
-            DvdM1FinishedEvent m12Finished = new DvdM1FinishedEvent(2);
-           
-            DvdM1FinishedEvent m13Finished = new DvdM1FinishedEvent(3);
-           
-            DvdM1FinishedEvent m14Finished = new DvdM1FinishedEvent(4);
+            
            
 
             EventList.eventList.ReadFromHead();
@@ -324,20 +317,16 @@ namespace LinkedList
             Console.ReadLine();
         }
 
-        public void InitialiseVariables()
+        public void Initialisation()
         {
-            // initialise the state of the machines.
+            // schedule 4 dvdM1Finished (one for each machine 1)
+            // within the event, update the state of the machine.
+            DvdM1FinishedEvent m11Finished = new DvdM1FinishedEvent(1);
+            DvdM1FinishedEvent m12Finished = new DvdM1FinishedEvent(2);
+            DvdM1FinishedEvent m13Finished = new DvdM1FinishedEvent(3);
+            DvdM1FinishedEvent m14Finished = new DvdM1FinishedEvent(4);
 
-            // initialise MasterTime to zero
-            GeneralTime.MasterTime = 0;
-
-            // schedule M1 breaking down event
-            M1BreaksEvent m1Break = new M1BreaksEvent(1);            
-
-            // schedule DvdM1FinishedEvent
-            DvdM1FinishedEvent m1Finished = new DvdM1FinishedEvent(1);
-            m1Finished.PrintDetails();
-            // update state of M1.
+            
         }
     }
 }

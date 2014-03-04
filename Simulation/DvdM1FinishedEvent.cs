@@ -28,17 +28,25 @@ namespace LinkedList
             }
         }
 
+
         public DvdM1FinishedEvent(int index)
 	    {
             // the index is used to check from which machine1 (4) is the event schedule
             M1Index = index;
+
+            // set the state of the machine
+            AlterMachine1StateToBusy(index);
 
             // using the "fake" planning method
             this.Time = PlanWhenEventFinished();
 
             // adding to the event list.
 
+
+            // FIND A WAY TO LOOK DYNAMICALLY LOOK AT THE STATE OF A MACHINE
+            // MAKE THE STATE A PROPERTY OF THE EVENT?
             this.PrintDetails();
+            
             EventList.eventList.Add(this);
             Console.WriteLine();
             // method to find time at which this event happens
@@ -54,6 +62,29 @@ namespace LinkedList
             Random rand = new Random();
             int finished = rand.Next(Math.Abs(Guid.NewGuid().GetHashCode()) % 100);
             return finished;
+        }
+
+        // assigning the correct index to the machine. Taken from the parameter passed to the object
+        public void AlterMachine1StateToBusy(int index)
+        {
+            switch (index)
+            {
+                case 1:
+                    MachineState.M11State = MachineState.State.busy;
+                    break;
+                case 2:
+                    MachineState.M12State = MachineState.State.busy;
+                    break;
+                case 3:
+                    MachineState.M13State = MachineState.State.busy;
+                    break;
+                case 4:
+                    MachineState.M14State = MachineState.State.busy;
+                    break;
+                case default:
+                    throw new Exception("we do not have that machine");
+                    break;
+            }
         }
 
 

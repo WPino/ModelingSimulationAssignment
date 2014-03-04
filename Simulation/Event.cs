@@ -5,6 +5,8 @@ using System.Text;
 
 // NEW OVERALL COMMENT
 
+// new comment
+
 namespace LinkedList 
 {
     public class Event
