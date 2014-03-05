@@ -31,6 +31,13 @@ namespace Simulation
         }
     }
 
+    public static class SystemState
+    {
+        public static int totalDVDFinished { get; set; }
+
+        public static List<double> throughputTimes = new List<double>();
+    }
+
 
 
 
@@ -69,6 +76,9 @@ namespace Simulation
         Machine2[] machines2 = new Machine2[2];
         Machine3[] machines3 = new Machine3[2];
         Machine4[] machines4 = new Machine4[2];
+        int buffersize2 = 20;
+        int buffersize3 = 20;
+        int buffersize4 = 20;
    
         static void Main(string[] args)
         {
@@ -77,6 +87,7 @@ namespace Simulation
 
             EventList.eventList.ReadFromHead();
 
+            p.Analyze();
 
             Console.ReadLine();
         }
@@ -91,6 +102,7 @@ namespace Simulation
             // schedule first events
             ScheduleEvents();
             
+
         }
 
         public void InitialiseMachines()
@@ -112,6 +124,10 @@ namespace Simulation
                 machines2[i].M2State = MachineState.State.idle;
                 machines3[i].M3State = MachineState.State.idle;
                 machines4[i].M4State = MachineState.State.idle;
+
+                machines2[i].setBufferSize(this.buffersize2);
+                machines3[i].setBufferSize(this.buffersize3);
+                machines4[i].setBufferSize(this.buffersize4);
             }
         }
 
@@ -122,6 +138,52 @@ namespace Simulation
                 machines1[i].ScheduleBreaksDown();
                 machines1[i].ScheduleDvdM1Finished();
             }
+        }
+
+        public void Analyze()
+        {
+            Console.WriteLine("========= Report =========");
+
+            Console.WriteLine("Total Runtime is {0} seconds or {1} hours.", GeneralTime.MasterTime, (GeneralTime.MasterTime / 3600));
+            Console.WriteLine();
+
+            Console.WriteLine("Buffer two = {0}/nBuffer three = {1}/nBuffer four = {2}",
+                this.buffersize2, this.buffersize3, this.buffersize4);
+            Console.WriteLine();
+
+            double avgBusyTimeM1 = (machines1[0].busytime + machines1[1].busytime + 
+                machines1[2].busytime + machines1[3].busytime) / (GeneralTime.MasterTime * 4);
+            double avgBusyTimeM2 = (machines2[0].busytime + machines2[1].busytime) / (GeneralTime.MasterTime * 2);
+            double avgBusyTimeM3 = (machines3[0].busytime + machines3[1].busytime) / (GeneralTime.MasterTime * 2);
+            double avgBusyTimeM4 = (machines4[0].busytime + machines4[1].busytime) / (GeneralTime.MasterTime * 2);
+
+            Console.WriteLine("Percent of time the machines one are busy (on average per machine):");
+            Console.WriteLine("      {0} %", avgBusyTimeM1);
+            Console.WriteLine("Percent of time the machines two are busy (on average per machine):");
+            Console.WriteLine("      {0} %", avgBusyTimeM2);
+            Console.WriteLine("Percent of time the machines three are busy (on average per machine):");
+            Console.WriteLine("      {0} %", avgBusyTimeM3);
+            Console.WriteLine("Percent of time the machines four are busy (on average per machine):");
+            Console.WriteLine("      {0} %", avgBusyTimeM4);
+
+            double prodHour = 0;
+            if (GeneralTime.MasterTime != 0)
+            {
+                prodHour = SystemState.totalDVDFinished / (GeneralTime.MasterTime / 3600);
+            }
+            Console.WriteLine("Production per hour = {0}", prodHour);
+            Console.WriteLine();
+
+            double avgThroughputTime, totalThroughputTime = 0;
+            for (int i = 0; i < SystemState.throughputTimes.Count; i++)
+            {
+                totalThroughputTime += SystemState.throughputTimes[i];
+            }
+            avgThroughputTime = totalThroughputTime / SystemState.totalDVDFinished;
+            Console.WriteLine("Average throughput time = {0}", avgThroughputTime);
+            Console.WriteLine();
+
+            Console.WriteLine("=========================");
         }
     }
 }

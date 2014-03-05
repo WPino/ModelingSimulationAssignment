@@ -13,18 +13,38 @@ namespace Simulation
     {
         protected MachineState.State state;
         protected int index;
+        protected double[] buffer;
 
-        protected int upTime;
-        protected int downTime;
 
-        public void IncreaseUpTime(int delta)
+        protected int busyTime;
+        protected int idleTime;
+        protected int brokenTime;
+        protected int stalledTime;
+        protected int blockedTime;
+
+        public void IncreaseStateTime(int delta, string state)
         {
-            upTime += delta;
+            if (state == "busy")
+                busyTime += delta;
+            if (state == "idle")
+                idleTime += delta;
+            if (state == "broken")
+                brokenTime += delta;
+            if (state == "stalled")
+                stalledTime += delta;
+            if (state == "blocked")
+                blockedTime += delta;
         }
 
-        public void IncreaseDownTime(int delta)
+        public int busytime { get { return busyTime; } }
+        public int idletime { get { return idleTime; } }
+        public int brokentime { get { return brokenTime; } }
+        public int stalledtime { get { return stalledTime; } }
+        public int blockedtime { get { return blockedTime; } }
+
+        public void setBufferSize(int size)
         {
-            downTime += delta;
+            buffer = new double[size];
         }
 
         // to be overriden since not all machines hold the same info
