@@ -133,9 +133,9 @@ namespace Simulation
                 SystemState.machines3[i].M3State = MachineState.State.idle;
                 SystemState.machines4[i].M4State = MachineState.State.idle;
 
-                SystemState.machines2[i].setBufferSize(this.buffersize2);
-                SystemState.machines3[i].setBufferSize(this.buffersize3);
-                SystemState.machines4[i].setBufferSize(this.buffersize4);
+                SystemState.machines2[i].bufferSize = this.buffersize2;
+                SystemState.machines3[i].bufferSize = this.buffersize3;
+                SystemState.machines4[i].bufferSize = this.buffersize4;
             }
         }
 
@@ -145,6 +145,7 @@ namespace Simulation
             {
                 SystemState.machines1[i].ScheduleBreaksDown();
                 SystemState.machines1[i].ScheduleDvdM1Finished();
+                SystemState.machines1[i].state = MachineState.State.busy;
             }
         }
 

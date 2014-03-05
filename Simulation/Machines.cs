@@ -13,13 +13,14 @@ namespace Simulation
     {
         public MachineState.State state { get; set; }
         protected int index;
-        protected double[] buffer;
+        public Queue<double> buffer; //nicer way to do this without setting to public
+        
 
 
         protected int busyTime;
         protected int idleTime;
         protected int brokenTime;
-        protected int stalledTime;
+        protected int stalledTime; //do we need this state??
         protected int blockedTime;
 
         public void IncreaseStateTime(int delta, string state)
@@ -42,10 +43,12 @@ namespace Simulation
         public int stalledtime { get { return stalledTime; } }
         public int blockedtime { get { return blockedTime; } }
 
-        public void setBufferSize(int size)
+        public int bufferSize { get; set; }
+
+        /*public void setBufferSize(int size)
         {
             buffer = new double[size];
-        }
+        }*/
 
         // to be overriden since not all machines hold the same info
         public virtual void MachineDetails()
@@ -176,6 +179,11 @@ namespace Simulation
             brokenTime = 0;
             stalledTime = 0;
             blockedTime = 0;
+        }
+
+        public void ScheduleDvdM2Finished()
+        {
+            DvdM2FinishedEvent m2Finished = new DvdM2FinishedEvent(index);
         }
 
         public override void MachineDetails()

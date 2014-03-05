@@ -10,7 +10,7 @@ namespace Simulation
     class DvdM2FinishedEvent : Event
     {
 
-        public DvdM2FinishedEvent()
+        public DvdM2FinishedEvent(int index)
         {
             // method to find time at which this event happens
             // and add to EventList.eventList

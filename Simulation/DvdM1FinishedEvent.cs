@@ -48,10 +48,52 @@ namespace Simulation
 
         public override void HandleEvent()
         {
-            if (machine1Index == 1 || machine1Index == 2)
+            int startTime = 0; //starttime of the dvd production -> needs to be implemented
+            
+            // Checks which production line the machine is in (which machine two has to be checked)
+            // and what the other machine in that production line is
+            int prodLine, otherMachine;
+            if (machine1Index == 0 || machine1Index == 1)
             {
-                if (SystemState.machines2[0].state == MachineState.State.idle)
-                { }
+                prodLine = 0;
+                if(machine1Index == 0)
+                    otherMachine = 1;
+                else
+                    otherMachine = 0;
+            }
+            else
+            {
+                prodLine = 1;
+                if(machine1Index == 2)
+                    otherMachine = 3;
+                else
+                    otherMachine = 2;
+            }
+
+            // if machine 2 is idle schedule a dvdM2 finished event and set the M2 to busy, otherwise put in buffer
+            if (SystemState.machines2[prodLine].state == MachineState.State.idle)
+            {
+                SystemState.machines2[prodLine].ScheduleDvdM2Finished();
+                SystemState.machines2[prodLine].state = MachineState.State.busy;
+            }
+            else
+            {
+                SystemState.machines2[prodLine].buffer.Enqueue(startTime);
+            }
+            // if the buffer is full (or has one spot left which the other machine will fill) set to blocked
+            if (SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize ||
+                ((SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize - 1) &&
+                (SystemState.machines1[otherMachine].state == MachineState.State.busy)))
+            {
+                SystemState.machines1[machine1Index].state = MachineState.State.blocked;
+            }
+
+            // if the machine is neither blocked nor broken, schedule new event and set to busy
+            if (SystemState.machines2[prodLine].state != MachineState.State.blocked && 
+                SystemState.machines2[prodLine].state != MachineState.State.broken)
+            {
+                SystemState.machines1[machine1Index].ScheduleDvdM1Finished();
+                SystemState.machines1[machine1Index].state = MachineState.State.busy;
             }
             
         }
