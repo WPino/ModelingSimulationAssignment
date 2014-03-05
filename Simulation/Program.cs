@@ -142,20 +142,28 @@ namespace Simulation
 
         public void Analyze()
         {
-            Console.WriteLine("========= Report =========");
+            Console.WriteLine(" ========= REPORT ========= ");
 
             Console.WriteLine("Total Runtime is {0} seconds or {1} hours.", GeneralTime.MasterTime, (GeneralTime.MasterTime / 3600));
             Console.WriteLine();
 
-            Console.WriteLine("Buffer two = {0}/nBuffer three = {1}/nBuffer four = {2}",
+            Console.WriteLine("Buffer two = {0}\nBuffer three = {1}\nBuffer four = {2}",
                 this.buffersize2, this.buffersize3, this.buffersize4);
             Console.WriteLine();
 
-            double avgBusyTimeM1 = (machines1[0].busytime + machines1[1].busytime + 
-                machines1[2].busytime + machines1[3].busytime) / (GeneralTime.MasterTime * 4);
-            double avgBusyTimeM2 = (machines2[0].busytime + machines2[1].busytime) / (GeneralTime.MasterTime * 2);
-            double avgBusyTimeM3 = (machines3[0].busytime + machines3[1].busytime) / (GeneralTime.MasterTime * 2);
-            double avgBusyTimeM4 = (machines4[0].busytime + machines4[1].busytime) / (GeneralTime.MasterTime * 2);
+            double avgBusyTimeM1 = 0;
+            double avgBusyTimeM2 = 0;
+            double avgBusyTimeM3 = 0;
+            double avgBusyTimeM4 = 0;
+
+            if (GeneralTime.MasterTime != 0)
+            {
+                avgBusyTimeM1 = (machines1[0].busytime + machines1[1].busytime +
+                    machines1[2].busytime + machines1[3].busytime) / (GeneralTime.MasterTime * 4);
+                avgBusyTimeM2 = (machines2[0].busytime + machines2[1].busytime) / (GeneralTime.MasterTime * 2);
+                avgBusyTimeM3 = (machines3[0].busytime + machines3[1].busytime) / (GeneralTime.MasterTime * 2);
+                avgBusyTimeM4 = (machines4[0].busytime + machines4[1].busytime) / (GeneralTime.MasterTime * 2);
+            }
 
             Console.WriteLine("Percent of time the machines one are busy (on average per machine):");
             Console.WriteLine("      {0} %", avgBusyTimeM1);
@@ -165,6 +173,7 @@ namespace Simulation
             Console.WriteLine("      {0} %", avgBusyTimeM3);
             Console.WriteLine("Percent of time the machines four are busy (on average per machine):");
             Console.WriteLine("      {0} %", avgBusyTimeM4);
+            Console.WriteLine();
 
             double prodHour = 0;
             if (GeneralTime.MasterTime != 0)
@@ -183,7 +192,7 @@ namespace Simulation
             Console.WriteLine("Average throughput time = {0}", avgThroughputTime);
             Console.WriteLine();
 
-            Console.WriteLine("=========================");
+            Console.WriteLine(" ========================= ");
         }
     }
 }

@@ -100,8 +100,11 @@ namespace Simulation
         public Machine1(int index)
         {
             this.index = index;
-            upTime = 0;
-            downTime = 0;
+            busyTime = 0;
+            idleTime = 0;
+            brokenTime = 0;
+            stalledTime = 0;
+            blockedTime = 0;
         }
 
 
@@ -123,7 +126,7 @@ namespace Simulation
         public override void MachineDetails()
         {
             Console.WriteLine("type: {0}\nindex: {1}\nstate: {2}\nupTime: {3}\ndownTime: {4}",
-                type, M1Index, M1State, upTime, downTime);
+                type, M1Index, M1State, busyTime, idleTime + brokenTime + stalledTime + blockedTime);
         }
     }
 
@@ -168,14 +171,17 @@ namespace Simulation
         public Machine2(int index)
         {
             M2Index = index;
-            upTime = 0;
-            downTime = 0;
+            busyTime = 0;
+            idleTime = 0;
+            brokenTime = 0;
+            stalledTime = 0;
+            blockedTime = 0;
         }
 
         public override void MachineDetails()
         {
             Console.WriteLine("type: {0}\nindex: {1}\nstate: {2}\nupTime: {3}\ndownTime: {4}",
-                type, index, M2State, upTime, downTime);
+                type, index, M2State, busyTime, idleTime + brokenTime + stalledTime + blockedTime);
         }
     }
 
@@ -222,14 +228,17 @@ namespace Simulation
         public Machine3(int index)
         {
             M3Index = index;
-            upTime = 0;
-            downTime = 0;
+            busyTime = 0;
+            idleTime = 0;
+            brokenTime = 0;
+            stalledTime = 0;
+            blockedTime = 0;
         }
 
         public override void MachineDetails()
         {
             Console.WriteLine("type: {0}\nindex: {1}\nstate: {2}\nupTime: {3}\ndownTime: {4}",
-                type, index, M3State, upTime, downTime);
+                type, index, M3State, busyTime, idleTime + brokenTime + stalledTime + blockedTime);
         }
     }
 
@@ -273,14 +282,17 @@ namespace Simulation
         public Machine4(int index)
         {
             M4Index = index;
-            upTime = 0;
-            downTime = 0;
+            busyTime = 0;
+            idleTime = 0;
+            brokenTime = 0;
+            stalledTime = 0;
+            blockedTime = 0;
         }
 
         public override void MachineDetails()
         {
             Console.WriteLine("type: {0}\nindex: {1}\nstate: {2}\nupTime: {3}\ndownTime: {4}",
-                type, index, M4State, upTime, downTime);
+                type, index, M4State, busyTime, idleTime + brokenTime + stalledTime + blockedTime);
         }
     }
 }
