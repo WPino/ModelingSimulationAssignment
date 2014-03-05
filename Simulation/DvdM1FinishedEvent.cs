@@ -48,7 +48,11 @@ namespace Simulation
 
         public override void HandleEvent()
         {
-            // check if one of the machine is idle
+            if (machine1Index == 1 || machine1Index == 2)
+            {
+                if (SystemState.machines2[0].state == MachineState.State.idle)
+                { }
+            }
             
         }
 

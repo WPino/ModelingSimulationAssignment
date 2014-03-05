@@ -33,6 +33,12 @@ namespace Simulation
 
     public static class SystemState
     {
+
+        public static Machine1[] machines1;
+        public static Machine2[] machines2;
+        public static Machine3[] machines3;
+        public static Machine4[] machines4;
+
         public static int totalDVDFinished { get; set; }
 
         public static List<double> throughputTimes = new List<double>();
@@ -72,10 +78,7 @@ namespace Simulation
 
     class Program
     {
-        Machine1[] machines1 = new Machine1[4];
-        Machine2[] machines2 = new Machine2[2];
-        Machine3[] machines3 = new Machine3[2];
-        Machine4[] machines4 = new Machine4[2];
+        
         int buffersize2 = 20;
         int buffersize3 = 20;
         int buffersize4 = 20;
@@ -107,27 +110,32 @@ namespace Simulation
 
         public void InitialiseMachines()
         {
+            SystemState.machines1 = new Machine1[4];
+            SystemState.machines2 = new Machine2[2];
+            SystemState.machines3 = new Machine3[2];
+            SystemState.machines4 = new Machine4[2];
+
             // intialisation machines 1
             for (int i = 0; i < 4; i++)
             {
-                machines1[i] = new Machine1(i);
-                machines1[i].M1State = MachineState.State.idle;
+                SystemState.machines1[i] = new Machine1(i);
+                SystemState.machines1[i].M1State = MachineState.State.idle;
             }
 
             // initialising machines 2, 3, 4
             for (int i = 0; i < 2; i++)
             {
-                machines2[i] = new Machine2(i);
-                machines3[i] = new Machine3(i);
-                machines4[i] = new Machine4(i);
+                SystemState.machines2[i] = new Machine2(i);
+                SystemState.machines3[i] = new Machine3(i);
+                SystemState.machines4[i] = new Machine4(i);
 
-                machines2[i].M2State = MachineState.State.idle;
-                machines3[i].M3State = MachineState.State.idle;
-                machines4[i].M4State = MachineState.State.idle;
+                SystemState.machines2[i].M2State = MachineState.State.idle;
+                SystemState.machines3[i].M3State = MachineState.State.idle;
+                SystemState.machines4[i].M4State = MachineState.State.idle;
 
-                machines2[i].setBufferSize(this.buffersize2);
-                machines3[i].setBufferSize(this.buffersize3);
-                machines4[i].setBufferSize(this.buffersize4);
+                SystemState.machines2[i].setBufferSize(this.buffersize2);
+                SystemState.machines3[i].setBufferSize(this.buffersize3);
+                SystemState.machines4[i].setBufferSize(this.buffersize4);
             }
         }
 
@@ -135,8 +143,8 @@ namespace Simulation
         {
             for (int i = 0; i < 4; i++)
             {
-                machines1[i].ScheduleBreaksDown();
-                machines1[i].ScheduleDvdM1Finished();
+                SystemState.machines1[i].ScheduleBreaksDown();
+                SystemState.machines1[i].ScheduleDvdM1Finished();
             }
         }
 
@@ -158,11 +166,11 @@ namespace Simulation
 
             if (GeneralTime.MasterTime != 0)
             {
-                avgBusyTimeM1 = (machines1[0].busytime + machines1[1].busytime +
-                    machines1[2].busytime + machines1[3].busytime) / (GeneralTime.MasterTime * 4);
-                avgBusyTimeM2 = (machines2[0].busytime + machines2[1].busytime) / (GeneralTime.MasterTime * 2);
-                avgBusyTimeM3 = (machines3[0].busytime + machines3[1].busytime) / (GeneralTime.MasterTime * 2);
-                avgBusyTimeM4 = (machines4[0].busytime + machines4[1].busytime) / (GeneralTime.MasterTime * 2);
+                avgBusyTimeM1 = (SystemState.machines1[0].busytime + SystemState.machines1[1].busytime +
+                    SystemState.machines1[2].busytime + SystemState.machines1[3].busytime) / (GeneralTime.MasterTime * 4);
+                avgBusyTimeM2 = (SystemState.machines2[0].busytime + SystemState.machines2[1].busytime) / (GeneralTime.MasterTime * 2);
+                avgBusyTimeM3 = (SystemState.machines3[0].busytime + SystemState.machines3[1].busytime) / (GeneralTime.MasterTime * 2);
+                avgBusyTimeM4 = (SystemState.machines4[0].busytime + SystemState.machines4[1].busytime) / (GeneralTime.MasterTime * 2);
             }
 
             Console.WriteLine("Percent of time the machines one are busy (on average per machine):");

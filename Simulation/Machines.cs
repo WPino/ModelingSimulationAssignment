@@ -11,7 +11,7 @@ namespace Simulation
 
     public class Machine
     {
-        protected MachineState.State state;
+        public MachineState.State state { get; set; }
         protected int index;
         protected double[] buffer;
 
@@ -55,7 +55,7 @@ namespace Simulation
     }
 
     // derived class
-    class Machine1 : Machine 
+    public class Machine1 : Machine 
     {   
         private string type = "machine 1";
 
@@ -131,7 +131,7 @@ namespace Simulation
     }
 
     // derived class
-    class Machine2 : Machine
+    public class Machine2 : Machine
     {
         private string type = "machine 2";
         public MachineState.State M2State
@@ -187,7 +187,7 @@ namespace Simulation
 
 
     // derived class
-    class Machine3 : Machine
+    public class Machine3 : Machine
     {   
         private string type = "machine 3";
         public MachineState.State M3State
@@ -243,7 +243,7 @@ namespace Simulation
     }
 
     // derived class
-    class Machine4 : Machine
+    public class Machine4 : Machine
     {
         private string type = "machine 4";
         public MachineState.State M4State
