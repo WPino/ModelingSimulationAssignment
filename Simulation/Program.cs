@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 
-// new version :p
+// new version ;p
 
 namespace Simulation
 {
