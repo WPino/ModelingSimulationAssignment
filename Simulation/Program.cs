@@ -6,11 +6,10 @@ using System.Text;
 
 // new version :p
 
-namespace LinkedList
+namespace Simulation
 {
 
     // static class that allows us to update a general time in all classes
-
     public static class GeneralTime
     {
         private static int masterTime = 0;
@@ -37,7 +36,6 @@ namespace LinkedList
     public static class MachineState
     {
         #region enums
-        // different state options
         public enum State
         {
             idle,
@@ -46,243 +44,8 @@ namespace LinkedList
             stalled, // optional for machine3???
             broken
         };
-
-        // up and down time of each machine. Not crucial to the simulation yet!
         #endregion
 
-        #region fields State
-        // machines 1
-        private static State machine11State;
-        private static State machine12State;
-        private static State machine13State;
-        private static State machine14State;
-        // machine 2
-        private static State machine21State;
-        private static State machine22State;
-        // machines 3
-        private static State machine31State;
-        private static State machine32State;
-        // machines 4
-        private static State machine41State;
-        private static State machine42State;
-
-        #endregion
-
-        #region Properties State
-        
-        #region prop machines 1
-        // machines 1 can be busy, brocken or blocked
-        public static State M11State
-        {
-            get { return machine11State; }
-            set
-            {
-                if (value == State.busy
-                    || value == State.broken
-                    || value == State.blocked)
-                {
-                    machine11State = value;
-                }
-                else
-                {
-                    throw new Exception("this machine may not have this state");
-                }
-            }
-        }
-
-        public static State M12State
-        {
-            get { return machine12State; }
-            set
-            {
-                if (value == State.busy
-                    || value == State.broken
-                    || value == State.blocked)
-                {
-                    machine12State = value;
-                }
-                else
-                {
-                    throw new Exception("this machine may not have this state");
-                }
-            }
-        }
-
-        public static State M13State
-        {
-            get { return machine13State; }
-            set
-            {
-                if (value == State.busy
-                    || value == State.broken
-                    || value == State.blocked)
-                {
-                    machine13State = value;
-                }
-                else
-                {
-                    throw new Exception("this machine may not have this state");
-                }
-            }
-        }
-
-        public static State M14State
-        {
-            get { return machine14State; }
-            set
-            {
-                if (value == State.busy
-                    || value == State.broken
-                    || value == State.blocked)
-                {
-                    machine14State = value;
-                }
-                else
-                {
-                    throw new Exception("this machine may not have this state");
-                }
-            }
-        }
-        #endregion
-
-
-        #region prop machines 2
-        // machines 2 can eb idle, busy, blocked
-        public static State M21State
-        {
-            get { return machine21State; }
-            set
-            {
-                if (value == State.idle
-                    || value == State.busy
-                    || value == State.blocked)
-                {
-                    machine21State = value;
-                }
-                else
-                {
-                    throw new Exception("this machine may not have this state");
-                }
-            }
-        }
-
-        public static State M22State
-        {
-            get { return machine22State; }
-            set
-            {
-                if (value == State.idle
-                    || value == State.busy
-                    || value == State.blocked)
-                {
-                    machine22State = value;
-                }
-                else
-                {
-                    throw new Exception("this machine may not have this state");
-                }
-            }
-        }
-#endregion
-
-
-        #region prop machines 3
-        // machine 3 can be idle, busy, blocked or stalled
-        public static State M31State
-        {
-            get { return machine31State; }
-            set
-            {
-                if (value == State.idle
-                    || value == State.busy
-                    || value == State.blocked
-                    || value == State.stalled)
-                {
-                    machine31State = value;
-                }
-                else
-                {
-                    throw new Exception("this machine may not have this state");
-                }
-            }
-        }
-
-        public static State M32State
-        {
-            get { return machine32State; }
-            set
-            {
-                if (value == State.idle
-                    || value == State.busy
-                    || value == State.blocked
-                    || value == State.stalled)
-                {
-                    machine32State = value;
-                }
-                else
-                {
-                    throw new Exception("this machine may not have this state");
-                }
-            }
-        }
-        #endregion
-
-
-        #region prop machines 4
-        // machines 4 can ene idle, busy or broken
-        public static State M41State
-        {
-            get { return machine41State; }
-            set
-            {
-                if (value == State.idle
-                    || value == State.busy
-                    || value == State.broken)
-                {
-                    machine41State = value;
-                }
-                else
-                {
-                    throw new Exception("this machine may not have this state");
-                }
-            }
-        }
-        public static State M42State
-        {
-            get { return machine42State; }
-            set
-            {
-                if (value == State.idle
-                    || value == State.busy
-                    || value == State.broken)
-                {
-                    machine42State = value;
-                }
-                else
-                {
-                    throw new Exception("this machine may not have this state");
-                }
-            }
-        }
-
-        #endregion
-        #endregion
-
-        #region properties upDownTime
-        public static int M11TotalUpTime { get; set; }
-        public static int M12TotalUpTime { get; set; }
-        public static int M13TotalUpTime { get; set; }
-        public static int M14TotalUpTime { get; set; }
-
-        public static int M21TotalUpTime { get; set; }
-        public static int M23TotalUpTime { get; set; }
-
-        public static int M31TotalUpTime { get; set; }
-        public static int M32TotalUpTime { get; set; }
-
-        public static int M41TotalUpTime { get; set; }
-        public static int M42TotalUpTime { get; set; }
-        #endregion
     }
 
 
@@ -296,37 +59,67 @@ namespace LinkedList
         public static LinkedList eventList = new LinkedList();
     }
 
-
-
+           
 
     class Program
     {
+        Machine1[] machines1 = new Machine1[4];
+        Machine2[] machines2 = new Machine2[2];
+        Machine3[] machines3 = new Machine3[2];
+        Machine4[] machines4 = new Machine4[2];
    
         static void Main(string[] args)
         {
             Program p = new Program();
-            //p.InitialiseVariables();
-
-            // Adding 4 dvd machine 1 finished (one for each machine 1) and check the linked list.
-
+            p.Initialisation();
             
-           
-
             EventList.eventList.ReadFromHead();
+
 
             Console.ReadLine();
         }
 
         public void Initialisation()
         {
-            // schedule 4 dvdM1Finished (one for each machine 1)
-            // within the event, update the state of the machine.
-            DvdM1FinishedEvent m11Finished = new DvdM1FinishedEvent(1);
-            DvdM1FinishedEvent m12Finished = new DvdM1FinishedEvent(2);
-            DvdM1FinishedEvent m13Finished = new DvdM1FinishedEvent(3);
-            DvdM1FinishedEvent m14Finished = new DvdM1FinishedEvent(4);
-
             
+ 
+            // initialise all machines
+            InitialiseMachines();
+
+            // schedule first events
+            ScheduleEvents();
+            
+        }
+
+        public void InitialiseMachines()
+        {
+            // intialisation machines 1
+            for (int i = 0; i < 4; i++)
+            {
+                machines1[i] = new Machine1(i);
+                machines1[i].M1State = MachineState.State.idle;
+            }
+
+            // initialising machines 2, 3, 4
+            for (int i = 0; i < 2; i++)
+            {
+                machines2[i] = new Machine2(i);
+                machines3[i] = new Machine3(i);
+                machines4[i] = new Machine4(i);
+
+                machines2[i].M2State = MachineState.State.idle;
+                machines3[i].M3State = MachineState.State.idle;
+                machines4[i].M4State = MachineState.State.idle;
+            }
+        }
+
+        public void ScheduleEvents()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                machines1[i].ScheduleBreaksDown();
+                machines1[i].ScheduleDvdM1Finished();
+            }
         }
     }
 }

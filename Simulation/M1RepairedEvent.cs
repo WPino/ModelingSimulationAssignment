@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace LinkedList
+namespace Simulation
 {
-    // still needs constructor
     class M1RepairedEvent : Event
     {
         private int machine1Index;
@@ -31,7 +30,10 @@ namespace LinkedList
         public M1RepairedEvent(int index)
         {
             // check which machine1 was fixed using the index
-           M1Index = index;
+            M1Index = index;
+            this.Time = CalculateEventTime();
+
+            EventList.eventList.Add(this);
 
             // method to find time at which this event happens
             // and add to EventList.eventList
@@ -44,6 +46,16 @@ namespace LinkedList
                 eventType, machine1Index, this.Time);
             Console.WriteLine(myState);
             Console.WriteLine();
+        }
+
+        public override int CalculateEventTime()
+        {
+            return GeneralTime.MasterTime + (2 * 60 * 60);
+        }
+
+        public override void HandleEvent()
+        {
+            base.HandleEvent();
         }
     }
 }

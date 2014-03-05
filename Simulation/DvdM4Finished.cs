@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace LinkedList
+namespace Simulation
 {
     class DvdM4Finished : Event
     {

@@ -50,6 +50,7 @@
     <Compile Include="M1BreaksEvent.cs" />
     <Compile Include="M1RepairedEvent.cs" />
     <Compile Include="M4NewInkEvent.cs" />
+    <Compile Include="Machines.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToBuffer2Event.cs" />

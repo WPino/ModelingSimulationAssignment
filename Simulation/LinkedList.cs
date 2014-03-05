@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace LinkedList 
+namespace Simulation 
 {
     public class LinkedList
     {
@@ -120,13 +120,15 @@ namespace LinkedList
         }
 
         // we want to delete the first node
-        public void Remove()
+        public Event Remove()
         {
+            Event temp = headEvent;
             headEvent = headEvent.Next;
             headEvent.Prev = endEvent;
             endEvent.Next = headEvent;
 
             length--;
+            return temp;
         }
     }
 }

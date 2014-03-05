@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace LinkedList
+namespace Simulation
 {
 
-    class M4NewInkEvent: Event
+    class M4NewInkEvent : Event
     {
 
         public M4NewInkEvent()

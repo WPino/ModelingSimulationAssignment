@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-// NEW OVERALL COMMENT
 
-// new comment
-
-namespace LinkedList 
+namespace Simulation 
 {
     public class Event
     {
@@ -85,9 +82,21 @@ namespace LinkedList
             }
         }
 
+        // should be overriden by all derived event class
         public virtual void PrintDetails()
         {
             Console.WriteLine("Generic base class event");
+        }
+
+        public virtual int CalculateEventTime()
+        {
+            return -1;
+        }
+
+        // should be overriden by every derived event class
+        public virtual void HandleEvent()
+        {
+            Console.WriteLine("generic event was handled");
         }
     }
 }
