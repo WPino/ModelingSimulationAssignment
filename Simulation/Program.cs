@@ -90,27 +90,29 @@ namespace Simulation
             p.Initialisation();
 
 
-            p.run();
-
-
-            EventList.eventList.ReadFromHead();
-
+            p.Run();
             p.Analyze();
 
             Console.ReadLine();
         }
 
-        public void run()
+        public void Run()
         {
+            
             while (EventList.eventList.HeadEvent.Time < endTime)
 	        {
+                EventList.eventList.ReadFromHead();
+                
+                
                 Event nextEvent = EventList.eventList.Remove();
                 GeneralTime.MasterTime = nextEvent.Time;
                 nextEvent.HandleEvent();
 
 
-                EventList.eventList.ReadFromHead();
+                
             }
+
+
 
         }
 

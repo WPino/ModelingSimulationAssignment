@@ -28,25 +28,32 @@ namespace Simulation
 
         public void Add(Event e)
         {
-            if (IsEmpty())
+            if (e != null && IsEmpty())
             {
-               
+                //e.PrintDetails();
+                //Console.WriteLine("details, list is empty");
+                //Console.ReadLine();
+
                 headEvent = e;
                 endEvent = e;
                 length++;
             }
-            else
+            else if(e != null)
             {
                 headEvent = headEvent.Add(e);
-                if (e.Next == null)
+                // this was needed to make the linked list loop
+                // head node points to the endnode and vice versa
+                // but we do not need that
+                /*if (e.Next == null)
                 {
-                    endEvent = e;
+                    
+                    /*endEvent = e;
                     endEvent.Next = headEvent;
                     headEvent.Prev = endEvent;
-                }
+                     
+                }*/
                 length++;
             }
-
         }
 
         public void ReadFromHead()
