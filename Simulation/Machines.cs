@@ -201,8 +201,7 @@ namespace Simulation
             {
                 if (value == MachineState.State.idle
                     || value == MachineState.State.busy
-                    || value == MachineState.State.blocked
-                    || value == MachineState.State.stalled)
+                    || value == MachineState.State.blocked)
                 {
                     state = value;
                 }
@@ -246,7 +245,7 @@ namespace Simulation
 
         public void ScheduleBatchM3Finished(Queue<double> batch)
         {
-
+            BatchM3FinishedEvent batchFinished = new BatchM3FinishedEvent(index, batch);
         }
 
         public override void MachineDetails()
@@ -260,6 +259,9 @@ namespace Simulation
     public class Machine4 : Machine
     {
         private string type = "machine 4";
+        public int inkCounter { get; set; }
+        public int deviation { get; set; }
+
         public MachineState.State M4State
         {
             get { return state; }
@@ -300,6 +302,49 @@ namespace Simulation
             idleTime = 0;
             brokenTime = 0;
             blockedTime = 0;
+            inkCounter = 0;
+
+            calculateDeviation();
+        }
+
+        public void ScheduleM4NewInk()
+        {
+
+        }
+
+        public void ScheduleDvdM4Finished(double startTimeDvd)
+        {
+
+        }
+
+        private void calculateDeviation()
+        {
+            Random R = new Random();
+            int value = R.Next(10);
+
+            switch (value)
+            {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                    deviation = 0;
+                    break;
+                case 4:
+                case 5:
+                    deviation = 1;
+                    break;
+                case 6:
+                case 7:
+                    deviation = -1;
+                    break;
+                case 8:
+                    deviation = 2;
+                    break;
+                default:
+                    deviation = -2;
+                    break;
+            }
         }
 
         public override void MachineDetails()

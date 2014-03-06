@@ -56,7 +56,6 @@ namespace Simulation
             idle,
             busy,
             blocked,
-            stalled, // optional for machine3???
             broken
         };
         #endregion
