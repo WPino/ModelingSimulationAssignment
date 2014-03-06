@@ -8,7 +8,7 @@ namespace Simulation
 {
     public class Event
     {
-        private int time;
+        private double time;
 
         private Event next = null;
         private Event previous = null;
@@ -19,7 +19,7 @@ namespace Simulation
         {
             this.time = time;
         }
-        public int Time
+        public double Time
         {
             get { return this.time; }
             set { this.time = value; }
@@ -88,7 +88,7 @@ namespace Simulation
             Console.WriteLine("Generic base class event");
         }
 
-        public virtual int CalculateEventTime()
+        public virtual double CalculateEventTime()
         {
             return -1;
         }

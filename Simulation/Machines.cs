@@ -13,14 +13,13 @@ namespace Simulation
     {
         public MachineState.State state { get; set; }
         protected int index;
-        public Queue<double> buffer; //nicer way to do this without setting to public
+        public Queue<double> buffer = new Queue<double>(); //nicer way to do this without setting to public?
         
 
 
         protected int busyTime;
         protected int idleTime;
         protected int brokenTime;
-        protected int stalledTime; //do we need this state??
         protected int blockedTime;
 
         public void IncreaseStateTime(int delta, string state)
@@ -31,8 +30,6 @@ namespace Simulation
                 idleTime += delta;
             if (state == "broken")
                 brokenTime += delta;
-            if (state == "stalled")
-                stalledTime += delta;
             if (state == "blocked")
                 blockedTime += delta;
         }
@@ -40,7 +37,6 @@ namespace Simulation
         public int busytime { get { return busyTime; } }
         public int idletime { get { return idleTime; } }
         public int brokentime { get { return brokenTime; } }
-        public int stalledtime { get { return stalledTime; } }
         public int blockedtime { get { return blockedTime; } }
 
         public int bufferSize { get; set; }
@@ -106,7 +102,6 @@ namespace Simulation
             busyTime = 0;
             idleTime = 0;
             brokenTime = 0;
-            stalledTime = 0;
             blockedTime = 0;
         }
 
@@ -118,18 +113,18 @@ namespace Simulation
 
         public void ScheduleRepaired()
         {
-
+            M1RepairedEvent repaired = new M1RepairedEvent(index);
         }
 
-        public void ScheduleDvdM1Finished()
+        public void ScheduleDvdM1Finished(double startTimeDvd)
         {
-            DvdM1FinishedEvent m1Finished = new DvdM1FinishedEvent(index);
+            DvdM1FinishedEvent m1Finished = new DvdM1FinishedEvent(index, startTimeDvd);
         }
 
         public override void MachineDetails()
         {
             Console.WriteLine("type: {0}\nindex: {1}\nstate: {2}\nupTime: {3}\ndownTime: {4}",
-                type, M1Index, M1State, busyTime, idleTime + brokenTime + stalledTime + blockedTime);
+                type, M1Index, M1State, busyTime, idleTime + brokenTime + blockedTime);
         }
     }
 
@@ -177,11 +172,10 @@ namespace Simulation
             busyTime = 0;
             idleTime = 0;
             brokenTime = 0;
-            stalledTime = 0;
             blockedTime = 0;
         }
 
-        public void ScheduleDvdM2Finished()
+        public void ScheduleDvdM2Finished(double startTimeDvd)
         {
             DvdM2FinishedEvent m2Finished = new DvdM2FinishedEvent(index);
         }
@@ -189,7 +183,7 @@ namespace Simulation
         public override void MachineDetails()
         {
             Console.WriteLine("type: {0}\nindex: {1}\nstate: {2}\nupTime: {3}\ndownTime: {4}",
-                type, index, M2State, busyTime, idleTime + brokenTime + stalledTime + blockedTime);
+                type, index, M2State, busyTime, idleTime + brokenTime + blockedTime);
         }
     }
 
@@ -239,14 +233,13 @@ namespace Simulation
             busyTime = 0;
             idleTime = 0;
             brokenTime = 0;
-            stalledTime = 0;
             blockedTime = 0;
         }
 
         public override void MachineDetails()
         {
             Console.WriteLine("type: {0}\nindex: {1}\nstate: {2}\nupTime: {3}\ndownTime: {4}",
-                type, index, M3State, busyTime, idleTime + brokenTime + stalledTime + blockedTime);
+                type, index, M3State, busyTime, idleTime + brokenTime + blockedTime);
         }
     }
 
@@ -293,14 +286,13 @@ namespace Simulation
             busyTime = 0;
             idleTime = 0;
             brokenTime = 0;
-            stalledTime = 0;
             blockedTime = 0;
         }
 
         public override void MachineDetails()
         {
             Console.WriteLine("type: {0}\nindex: {1}\nstate: {2}\nupTime: {3}\ndownTime: {4}",
-                type, index, M4State, busyTime, idleTime + brokenTime + stalledTime + blockedTime);
+                type, index, M4State, busyTime, idleTime + brokenTime + blockedTime);
         }
     }
 }

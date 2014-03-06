@@ -9,12 +9,14 @@ namespace Simulation
     {
         private int machine1Index;
         private string eventType = "DvdM1FinishedEvent";
+        double startTimeDvd;
 
 
 
-        public DvdM1FinishedEvent(int index)
+        public DvdM1FinishedEvent(int index, double starttime)
 	    {
             machine1Index = index;
+            startTimeDvd = starttime;
             
 
             
@@ -28,17 +30,17 @@ namespace Simulation
 
 
         // I am not using the proper data but random number (just for experimentations)
-        public int PlanWhenEventFinished()
+        public double PlanWhenEventFinished()
         {
 
             // dont really know how this random number Generator works but it seems to do the job;
             Random rand = new Random();
-            int finished = rand.Next(Math.Abs(Guid.NewGuid().GetHashCode()) % 100);
+            double finished = GeneralTime.MasterTime + rand.Next(Math.Abs(Guid.NewGuid().GetHashCode()) % 100);
             return finished;
         }
 
         // calculate when new Event of type DvdFinishedEvent will happen
-        public override int CalculateEventTime()
+        public override double CalculateEventTime()
         {
             // read from processing times (exponential distribution)
             // for now we use the random number from the fake method
@@ -48,7 +50,6 @@ namespace Simulation
 
         public override void HandleEvent()
         {
-            int startTime = 0; //starttime of the dvd production -> needs to be implemented
             
             // Checks which production line the machine is in (which machine two has to be checked)
             // and what the other machine in that production line is
@@ -73,17 +74,18 @@ namespace Simulation
             // if machine 2 is idle schedule a dvdM2 finished event and set the M2 to busy, otherwise put in buffer
             if (SystemState.machines2[prodLine].state == MachineState.State.idle)
             {
-                SystemState.machines2[prodLine].ScheduleDvdM2Finished();
+                SystemState.machines2[prodLine].ScheduleDvdM2Finished(startTimeDvd);
                 SystemState.machines2[prodLine].state = MachineState.State.busy;
             }
             else
             {
-                SystemState.machines2[prodLine].buffer.Enqueue(startTime);
+                SystemState.machines2[prodLine].buffer.Enqueue(startTimeDvd);
             }
-            // if the buffer is full (or has one spot left which the other machine will fill) set to blocked
-            if (SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize ||
+            // if the buffer is full (or has one spot left which the other machine will fill) set to blocked (but don't if the machine is broken)
+            if (SystemState.machines1[machine1Index].state != MachineState.State.blocked &&
+                (SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize ||
                 ((SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize - 1) &&
-                (SystemState.machines1[otherMachine].state == MachineState.State.busy)))
+                (SystemState.machines1[otherMachine].state == MachineState.State.busy))))
             {
                 SystemState.machines1[machine1Index].state = MachineState.State.blocked;
             }
@@ -92,13 +94,11 @@ namespace Simulation
             if (SystemState.machines2[prodLine].state != MachineState.State.blocked && 
                 SystemState.machines2[prodLine].state != MachineState.State.broken)
             {
-                SystemState.machines1[machine1Index].ScheduleDvdM1Finished();
+                SystemState.machines1[machine1Index].ScheduleDvdM1Finished(GeneralTime.MasterTime);
                 SystemState.machines1[machine1Index].state = MachineState.State.busy;
             }
             
         }
-
-
 
         public override void PrintDetails()
         {
@@ -108,6 +108,5 @@ namespace Simulation
             Console.WriteLine(myState);
             Console.WriteLine();
         }
-
     }
 }

@@ -48,14 +48,45 @@ namespace Simulation
             Console.WriteLine();
         }
 
-        public override int CalculateEventTime()
+        public override double CalculateEventTime()
         {
             return GeneralTime.MasterTime + (2 * 60 * 60);
         }
 
         public override void HandleEvent()
         {
-            base.HandleEvent();
+            SystemState.machines1[machine1Index].ScheduleBreaksDown();
+
+            int prodLine, otherMachine;
+            if (machine1Index == 0 || machine1Index == 1)
+            {
+                prodLine = 0;
+                if (machine1Index == 0)
+                    otherMachine = 1;
+                else
+                    otherMachine = 0;
+            }
+            else
+            {
+                prodLine = 1;
+                if (machine1Index == 2)
+                    otherMachine = 3;
+                else
+                    otherMachine = 2;
+            }
+
+            // once the system is repaired it is either set to blocked or to busy
+            if (SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize ||
+                ((SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize - 1) &&
+                (SystemState.machines1[otherMachine].state == MachineState.State.busy)))
+            {
+                SystemState.machines1[machine1Index].state = MachineState.State.blocked;
+            }
+            else
+            {
+                SystemState.machines1[machine1Index].ScheduleDvdM1Finished(GeneralTime.MasterTime);
+                SystemState.machines1[machine1Index].state = MachineState.State.busy;
+            }
         }
     }
 }

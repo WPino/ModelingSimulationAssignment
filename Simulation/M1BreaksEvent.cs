@@ -11,7 +11,7 @@ namespace Simulation
         private int machine1Index;
 
         
-        // in the constructor we need to schedule a new Repaired event 
+         
         public M1BreaksEvent(int index)
         {
             machine1Index = index;
@@ -29,15 +29,16 @@ namespace Simulation
             Console.WriteLine();
         }
 
-        public override int CalculateEventTime()
+        public override double CalculateEventTime()
         {
             return GeneralTime.MasterTime + (8 * 60 * 60);
         }
 
-        // when time arrives, state = broken
+        
         public override void HandleEvent()
         {
-            base.HandleEvent();
+            SystemState.machines1[machine1Index].ScheduleRepaired();
+            SystemState.machines1[machine1Index].state = MachineState.State.broken;
         }
     }
 }

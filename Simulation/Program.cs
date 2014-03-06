@@ -12,17 +12,17 @@ namespace Simulation
     // static class that allows us to update a general time in all classes
     public static class GeneralTime
     {
-        private static int masterTime = 0;
+        private static double masterTime = 0;
 
         // making sure time set is never negative
         // or smaller than previous time.
 
-        public static int MasterTime
+        public static double MasterTime
         {
             get { return masterTime; }
             set
             {
-                int temp = masterTime;
+                double temp = masterTime;
                 if (value >= 0 && value >= temp)
                 {
                     masterTime = value;
@@ -82,17 +82,36 @@ namespace Simulation
         int buffersize2 = 20;
         int buffersize3 = 20;
         int buffersize4 = 20;
+        double endTime = 100;
    
         static void Main(string[] args)
         {
             Program p = new Program();
             p.Initialisation();
 
+
+            p.run();
+
+
             EventList.eventList.ReadFromHead();
 
             p.Analyze();
 
             Console.ReadLine();
+        }
+
+        public void run()
+        {
+            while (GeneralTime.MasterTime < endTime)
+	        {
+                Event nextEvent = EventList.eventList.Remove();
+                nextEvent.HandleEvent();
+                GeneralTime.MasterTime = nextEvent.Time;
+
+
+                EventList.eventList.ReadFromHead();
+            }
+
         }
 
         public void Initialisation()
@@ -144,7 +163,7 @@ namespace Simulation
             for (int i = 0; i < 4; i++)
             {
                 SystemState.machines1[i].ScheduleBreaksDown();
-                SystemState.machines1[i].ScheduleDvdM1Finished();
+                SystemState.machines1[i].ScheduleDvdM1Finished(GeneralTime.MasterTime);
                 SystemState.machines1[i].state = MachineState.State.busy;
             }
         }
