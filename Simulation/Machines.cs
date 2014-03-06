@@ -238,7 +238,13 @@ namespace Simulation
             blockedTime = 0;
         }
 
+
         public void ScheduleDvdToBuffer3(double startTimeDvd)
+        {
+            ToBuffer3Event toBuffer3 = new ToBuffer3Event(index, startTimeDvd);
+        }
+
+        public void ScheduleBatchM3Finished(Queue<double> batch)
         {
 
         }

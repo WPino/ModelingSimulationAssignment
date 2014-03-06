@@ -7,10 +7,81 @@ namespace Simulation
 {
     class ToBuffer3Event : Event
     {
-        public ToBuffer3Event()
+        private int machine3Index;
+        private string eventType = "ToBuffer3Event";
+        double startTimeDvd;
+        
+        public ToBuffer3Event(int index, double starttime)
         {
+            machine3Index = index;
+            startTimeDvd = starttime;
+
+            // method calculating the time when the event will occur
+            this.Time = CalculateEventTime();
+
+            // adding event to the linkedlist
+            EventList.eventList.Add(this);
+            
             // method to find time at which this event happens
             // and add to EventList.eventList
+        }
+
+        public double CalculateEventTime()
+        {
+            double time = 5 * 60 + GeneralTime.MasterTime;
+            return time;
+        }
+
+        public override void HandleEvent()
+        {
+            SystemState.machines3[machine3Index].buffer.Enqueue(startTimeDvd);
+
+            //if the buffer before machine three is full, look whether either of the machines three is idle with an empty buffer
+            // (very inefficient to wait untill the buffer behind it is completely empty....)
+            // if so, schedule new M3 finished event, clear the buffer
+            if (SystemState.machines3[machine3Index].buffer.Count == SystemState.machines3[machine3Index].bufferSize)
+            {
+                if (SystemState.machines3[0].state == MachineState.State.idle && SystemState.machines4[0].buffer.Count == 0)
+                {
+                    Queue<double> newBatch = SystemState.machines3[machine3Index].buffer; //Should this be a clone?
+                    SystemState.machines3[0].ScheduleBatchM3Finished(newBatch);
+                    SystemState.machines3[machine3Index].buffer.Clear();
+                    SystemState.machines2[machine3Index].buffer3InclConveyorContent = 0;
+                    //if M2 was blocked -> schedule new event from buffer
+                    if (SystemState.machines2[machine3Index].state == MachineState.State.blocked &&
+                        SystemState.machines2[machine3Index].buffer.Count != 0)
+                    {
+                        double startTimeDvdfromQ = SystemState.machines2[machine3Index].buffer.Dequeue();
+                        SystemState.machines2[machine3Index].ScheduleDvdM2Finished(startTimeDvdfromQ);
+                        SystemState.machines2[machine3Index].state = MachineState.State.busy;
+                    }
+
+                }
+                else if (SystemState.machines3[1].state == MachineState.State.idle && SystemState.machines4[1].buffer.Count == 0)
+                {
+                    Queue<double> newBatch = SystemState.machines3[machine3Index].buffer; //Should this be a clone?
+                    SystemState.machines3[1].ScheduleBatchM3Finished(newBatch);
+                    SystemState.machines3[machine3Index].buffer.Clear();
+                    SystemState.machines2[machine3Index].buffer3InclConveyorContent = 0;
+                    //if M2 was blocked -> schedule new event from buffer
+                    if (SystemState.machines2[machine3Index].state == MachineState.State.blocked &&
+                        SystemState.machines2[machine3Index].buffer.Count != 0)
+                    {
+                        double startTimeDvdfromQ = SystemState.machines2[machine3Index].buffer.Dequeue();
+                        SystemState.machines2[machine3Index].ScheduleDvdM2Finished(startTimeDvdfromQ);
+                        SystemState.machines2[machine3Index].state = MachineState.State.busy;
+                    }
+                }
+            }
+        }
+
+        public override void PrintDetails()
+        {
+            string myState;
+            myState = String.Format("Type of event: {0}\nMachine3 index: {1}\nTime: {2}\n",
+                eventType, machine3Index, this.Time);
+            Console.WriteLine(myState);
+            Console.WriteLine();
         }
     }
 }
