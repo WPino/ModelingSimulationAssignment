@@ -132,6 +132,8 @@ namespace Simulation
     public class Machine2 : Machine
     {
         private string type = "machine 2";
+        public int buffer3InclConveyorContent { get; set; }
+
         public MachineState.State M2State
         {
             get { return state; }
@@ -177,7 +179,7 @@ namespace Simulation
 
         public void ScheduleDvdM2Finished(double startTimeDvd)
         {
-            DvdM2FinishedEvent m2Finished = new DvdM2FinishedEvent(index);
+            DvdM2FinishedEvent m2Finished = new DvdM2FinishedEvent(index, startTimeDvd);
         }
 
         public override void MachineDetails()
@@ -234,6 +236,11 @@ namespace Simulation
             idleTime = 0;
             brokenTime = 0;
             blockedTime = 0;
+        }
+
+        public void ScheduleDvdToBuffer3(double startTimeDvd)
+        {
+
         }
 
         public override void MachineDetails()

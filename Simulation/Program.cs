@@ -102,11 +102,11 @@ namespace Simulation
 
         public void run()
         {
-            while (GeneralTime.MasterTime < endTime)
+            while (EventList.eventList.HeadEvent.Time < endTime)
 	        {
                 Event nextEvent = EventList.eventList.Remove();
-                nextEvent.HandleEvent();
                 GeneralTime.MasterTime = nextEvent.Time;
+                nextEvent.HandleEvent();
 
 
                 EventList.eventList.ReadFromHead();
