@@ -37,6 +37,7 @@ namespace Simulation
 
 
         // only checking on time!!!
+        /* dont need this method anymore
         public int CompareTo(Event e)
         {
             if (time < e.time)
@@ -44,6 +45,7 @@ namespace Simulation
             else
                 return -1;
         }
+        */ 
 
         public bool Equals(Event e)
         {
@@ -55,7 +57,7 @@ namespace Simulation
 
         public Event Add(Event newEvent)
         {
-            if (this.CompareTo(newEvent) <= 0)
+            if (/*this.CompareTo(newEvent)*/ this.Time - newEvent.Time >= 0)
             {
                 newEvent.Next = this;
                 if (this.Prev != null)
