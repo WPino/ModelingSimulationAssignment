@@ -78,14 +78,14 @@ namespace Simulation
             // once the system is repaired it is either set to blocked or to busy
             if (SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize ||
                 ((SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize - 1) &&
-                (SystemState.machines1[otherMachine].state == MachineState.State.busy)))
+                (SystemState.machines1[otherMachine].M1State == MachineState.State.busy)))
             {
-                SystemState.machines1[machine1Index].state = MachineState.State.blocked;
+                SystemState.machines1[machine1Index].M1State = MachineState.State.blocked;
             }
             else
             {
                 SystemState.machines1[machine1Index].ScheduleDvdM1Finished(GeneralTime.MasterTime);
-                SystemState.machines1[machine1Index].state = MachineState.State.busy;
+                SystemState.machines1[machine1Index].M1State = MachineState.State.busy;
             }
         }
     }

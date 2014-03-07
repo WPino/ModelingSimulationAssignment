@@ -11,16 +11,16 @@ namespace Simulation
 
     public class Machine
     {
-        public MachineState.State state { get; set; }
+        protected MachineState.State state;
         protected int index;
         public Queue<double> buffer = new Queue<double>(); //nicer way to do this without setting to public?
         
 
 
-        protected int busyTime;
-        protected int idleTime;
-        protected int brokenTime;
-        protected int blockedTime;
+        protected double busyTime;
+        protected double idleTime;
+        protected double brokenTime;
+        protected double blockedTime;
 
         public void IncreaseStateTime(int delta, string state)
         {
@@ -34,10 +34,10 @@ namespace Simulation
                 blockedTime += delta;
         }
 
-        public int busytime { get { return busyTime; } }
-        public int idletime { get { return idleTime; } }
-        public int brokentime { get { return brokenTime; } }
-        public int blockedtime { get { return blockedTime; } }
+        public double busytime { get { return busyTime; } }
+        public double idletime { get { return idleTime; } }
+        public double brokentime { get { return brokenTime; } }
+        public double blockedtime { get { return blockedTime; } }
 
         public int bufferSize { get; set; }
 
@@ -57,6 +57,7 @@ namespace Simulation
     public class Machine1 : Machine 
     {   
         private string type = "machine 1";
+        private double lastStateChange = 0;
 
         // properties checking state and index
         public MachineState.State M1State
@@ -70,6 +71,26 @@ namespace Simulation
                     || value == MachineState.State.idle)
                 {
                     state = value;
+
+                    double recentStateChange = GeneralTime.MasterTime;
+                    double deltaStateChange = recentStateChange - lastStateChange;
+                    lastStateChange = recentStateChange;
+
+                    switch (value)
+                    {
+                        case MachineState.State.busy:
+                            busyTime += deltaStateChange;
+                            break;
+                        case MachineState.State.broken:
+                            brokenTime += deltaStateChange;
+                            break;
+                        case MachineState.State.blocked:
+                            blockedTime += deltaStateChange;
+                            break;
+                        default:
+                            idleTime += deltaStateChange;
+                            break;
+                    }
                 }
                 else
                 {
@@ -132,6 +153,7 @@ namespace Simulation
     public class Machine2 : Machine
     {
         private string type = "machine 2";
+        private double lastStateChange = 0;
         public int buffer3InclConveyorContent { get; set; }
 
         public MachineState.State M2State
@@ -144,6 +166,23 @@ namespace Simulation
                     || value == MachineState.State.blocked)
                 {
                     state = value;
+
+                    double recentStateChange = GeneralTime.MasterTime;
+                    double deltaStateChange = recentStateChange - lastStateChange;
+                    lastStateChange = recentStateChange;
+
+                    switch (value)
+                    {
+                        case MachineState.State.busy:
+                            busyTime += deltaStateChange;
+                            break;
+                        case MachineState.State.blocked:
+                            blockedTime += deltaStateChange;
+                            break;
+                        default:
+                            idleTime += deltaStateChange;
+                            break;
+                    }
                 }
                 else
                 {
@@ -194,6 +233,8 @@ namespace Simulation
     public class Machine3 : Machine
     {   
         private string type = "machine 3";
+        private double lastStateChange = 0;
+
         public MachineState.State M3State
         {
             get { return state; }
@@ -204,6 +245,24 @@ namespace Simulation
                     || value == MachineState.State.blocked)
                 {
                     state = value;
+
+
+                    double recentStateChange = GeneralTime.MasterTime;
+                    double deltaStateChange = recentStateChange - lastStateChange;
+                    lastStateChange = recentStateChange;
+
+                    switch (value)
+                    {
+                        case MachineState.State.busy:
+                            busyTime += deltaStateChange;
+                            break;
+                        case MachineState.State.blocked:
+                            blockedTime += deltaStateChange;
+                            break;
+                        default:
+                            idleTime += deltaStateChange;
+                            break;
+                    }
                 }
                 else
                 {
@@ -259,6 +318,7 @@ namespace Simulation
     public class Machine4 : Machine
     {
         private string type = "machine 4";
+        private double lastStateChange = 0;
         public int inkCounter { get; set; }
         public int deviation { get; set; }
 
@@ -272,6 +332,23 @@ namespace Simulation
                     || value == MachineState.State.broken)
                 {
                     state = value;
+                    
+                    double recentStateChange = GeneralTime.MasterTime;
+                    double deltaStateChange = recentStateChange - lastStateChange;
+                    lastStateChange = recentStateChange;
+
+                    switch (value)
+                    {
+                        case MachineState.State.busy:
+                            busyTime += deltaStateChange;
+                            break;
+                        case MachineState.State.blocked:
+                            blockedTime += deltaStateChange;
+                            break;
+                        default:
+                            idleTime += deltaStateChange;
+                            break;
+                    }
                 }
                 else
                 {

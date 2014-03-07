@@ -20,6 +20,18 @@ namespace Simulation
 
         }
 
+        public override double CalculateEventTime()
+        {
+            return GeneralTime.MasterTime + (500/*8 * 60 * 60*/);
+        }
+
+
+        public override void HandleEvent()
+        {
+            SystemState.machines1[machine1Index].ScheduleRepaired();
+            SystemState.machines1[machine1Index].M1State = MachineState.State.broken;
+        }
+
         public override void PrintDetails()
         {
             string myState;
@@ -27,18 +39,6 @@ namespace Simulation
                 eventType, machine1Index, this.Time);
             Console.WriteLine(myState);
             Console.WriteLine();
-        }
-
-        public override double CalculateEventTime()
-        {
-            return GeneralTime.MasterTime + (50/*8 * 60 * 60*/);
-        }
-
-        
-        public override void HandleEvent()
-        {
-            SystemState.machines1[machine1Index].ScheduleRepaired();
-            SystemState.machines1[machine1Index].state = MachineState.State.broken;
         }
     }
 }

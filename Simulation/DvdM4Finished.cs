@@ -36,7 +36,7 @@ namespace Simulation
             //update the inkCounter, the total amount of dvds finished and the throughput times
             SystemState.machines4[machine4Index].inkCounter++;
             SystemState.totalDVDFinished++;
-            SystemState.throughputTimes.Add(GeneralTime.MasterTime - startTimeDvd); //maybe more efficient way?
+            SystemState.updateThroughputTime(GeneralTime.MasterTime - startTimeDvd);
 
             //if there are still dvds in the buffer, schedule a new newink or M4finished event
             if (SystemState.machines4[machine4Index].buffer.Count != 0)
@@ -51,9 +51,9 @@ namespace Simulation
                     SystemState.machines4[machine4Index].ScheduleDvdM4Finished(startTimefromQ);
                 }
             }
-            else if (SystemState.machines3[machine4Index].state != MachineState.State.busy)
+            else if (SystemState.machines3[machine4Index].M3State != MachineState.State.busy)
             {
-                SystemState.machines3[machine4Index].state = MachineState.State.idle;
+                SystemState.machines3[machine4Index].M3State = MachineState.State.idle;
 
                 //if machine 3 is not idle check if either of the buffers are full, if so schedule a new M3batchfinished event
                 //also check if the M2 before was blocked and shedule a new event if so.
@@ -63,14 +63,14 @@ namespace Simulation
                     SystemState.machines3[machine4Index].ScheduleBatchM3Finished(newBatch);
                     SystemState.machines3[0].buffer.Clear();
                     SystemState.machines2[0].buffer3InclConveyorContent = 0;
-                    SystemState.machines3[machine4Index].state = MachineState.State.busy;
+                    SystemState.machines3[machine4Index].M3State = MachineState.State.busy;
                     //if M2 was blocked -> schedule new event from buffer
-                    if (SystemState.machines2[0].state == MachineState.State.blocked &&
+                    if (SystemState.machines2[0].M2State == MachineState.State.blocked &&
                         SystemState.machines2[0].buffer.Count != 0)
                     {
                         double startTimeDvdfromQ = SystemState.machines2[0].buffer.Dequeue();
                         SystemState.machines2[0].ScheduleDvdM2Finished(startTimeDvdfromQ);
-                        SystemState.machines2[0].state = MachineState.State.busy;
+                        SystemState.machines2[0].M2State = MachineState.State.busy;
                     }
 
                 }
@@ -80,14 +80,14 @@ namespace Simulation
                     SystemState.machines3[machine4Index].ScheduleBatchM3Finished(newBatch);
                     SystemState.machines3[1].buffer.Clear();
                     SystemState.machines2[1].buffer3InclConveyorContent = 0;
-                    SystemState.machines3[machine4Index].state = MachineState.State.busy;
+                    SystemState.machines3[machine4Index].M3State = MachineState.State.busy;
                     //if M2 was blocked -> schedule new event from buffer
-                    if (SystemState.machines2[1].state == MachineState.State.blocked &&
+                    if (SystemState.machines2[1].M2State == MachineState.State.blocked &&
                         SystemState.machines2[1].buffer.Count != 0)
                     {
                         double startTimeDvdfromQ = SystemState.machines2[0].buffer.Dequeue();
                         SystemState.machines2[1].ScheduleDvdM2Finished(startTimeDvdfromQ);
-                        SystemState.machines2[1].state = MachineState.State.busy;
+                        SystemState.machines2[1].M2State = MachineState.State.busy;
                     }
                 }
             }

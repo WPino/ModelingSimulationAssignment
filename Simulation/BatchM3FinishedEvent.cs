@@ -37,9 +37,9 @@ namespace Simulation
         public override void HandleEvent()
         {
             SystemState.machines4[machine3Index].buffer = new Queue<double>(startTimesDvds); //should we clone?
-            SystemState.machines3[machine3Index].state = MachineState.State.blocked;
+            SystemState.machines3[machine3Index].M3State = MachineState.State.blocked;
 
-            if (SystemState.machines4[machine3Index].state == MachineState.State.idle)
+            if (SystemState.machines4[machine3Index].M4State == MachineState.State.idle)
             {
                 if (SystemState.machines4[machine3Index].inkCounter == 200 + SystemState.machines4[machine3Index].deviation)
                 {
