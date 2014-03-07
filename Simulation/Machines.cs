@@ -98,7 +98,7 @@ namespace Simulation
         // constructor
         public Machine1(int index)
         {
-            this.index = index;
+            M1Index = index;
             busyTime = 0;
             idleTime = 0;
             brokenTime = 0;
@@ -108,17 +108,17 @@ namespace Simulation
 
         public void ScheduleBreaksDown()
         {
-            M1BreaksEvent breakDown = new M1BreaksEvent(index);
+            M1BreaksEvent breakDown = new M1BreaksEvent(M1Index);
         }
 
         public void ScheduleRepaired()
         {
-            M1RepairedEvent repaired = new M1RepairedEvent(index);
+            M1RepairedEvent repaired = new M1RepairedEvent(M1Index);
         }
 
         public void ScheduleDvdM1Finished(double startTimeDvd)
         {
-            DvdM1FinishedEvent m1Finished = new DvdM1FinishedEvent(index, startTimeDvd);
+            DvdM1FinishedEvent m1Finished = new DvdM1FinishedEvent(M1Index, startTimeDvd);
         }
 
         public override void MachineDetails()
@@ -179,7 +179,7 @@ namespace Simulation
 
         public void ScheduleDvdM2Finished(double startTimeDvd)
         {
-            DvdM2FinishedEvent m2Finished = new DvdM2FinishedEvent(index, startTimeDvd);
+            DvdM2FinishedEvent m2Finished = new DvdM2FinishedEvent(M2Index, startTimeDvd);
         }
 
         public override void MachineDetails()
@@ -240,12 +240,12 @@ namespace Simulation
 
         public void ScheduleDvdToBuffer3(double startTimeDvd)
         {
-            ToBuffer3Event toBuffer3 = new ToBuffer3Event(index, startTimeDvd);
+            ToBuffer3Event toBuffer3 = new ToBuffer3Event(M3Index, startTimeDvd);
         }
 
         public void ScheduleBatchM3Finished(Queue<double> batch)
         {
-            BatchM3FinishedEvent batchFinished = new BatchM3FinishedEvent(index, batch);
+            BatchM3FinishedEvent batchFinished = new BatchM3FinishedEvent(M3Index, batch);
         }
 
         public override void MachineDetails()
@@ -309,12 +309,12 @@ namespace Simulation
 
         public void ScheduleM4NewInk()
         {
-
+            M4NewInkEvent M4NewInk = new M4NewInkEvent(M4Index);
         }
 
         public void ScheduleDvdM4Finished(double startTimeDvd)
         {
-
+            DvdM4Finished dvdM4Finished = new DvdM4Finished(M4Index, startTimeDvd);
         }
 
         public void calculateDeviation()

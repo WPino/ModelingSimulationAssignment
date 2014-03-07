@@ -47,6 +47,7 @@ namespace Simulation
                     SystemState.machines3[0].ScheduleBatchM3Finished(newBatch);
                     SystemState.machines3[machine3Index].buffer.Clear();
                     SystemState.machines2[machine3Index].buffer3InclConveyorContent = 0;
+                    SystemState.machines3[0].state = MachineState.State.busy;
                     //if M2 was blocked -> schedule new event from buffer
                     if (SystemState.machines2[machine3Index].state == MachineState.State.blocked &&
                         SystemState.machines2[machine3Index].buffer.Count != 0)
@@ -63,6 +64,7 @@ namespace Simulation
                     SystemState.machines3[1].ScheduleBatchM3Finished(newBatch);
                     SystemState.machines3[machine3Index].buffer.Clear();
                     SystemState.machines2[machine3Index].buffer3InclConveyorContent = 0;
+                    SystemState.machines3[1].state = MachineState.State.busy;
                     //if M2 was blocked -> schedule new event from buffer
                     if (SystemState.machines2[machine3Index].state == MachineState.State.blocked &&
                         SystemState.machines2[machine3Index].buffer.Count != 0)
