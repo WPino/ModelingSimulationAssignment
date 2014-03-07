@@ -27,11 +27,27 @@ namespace Simulation
 
         public override double CalculateEventTime()
         {
-            double sputteringTime=40, lacquerCoatingTime=40, dryingTime=40; //completely arbitratry times, perhaps write method for each?
+            double sputteringTime = 0, lacquerCoatingTime = 0, dryingTime = (3 * 60), delay = 0;
+
+            for (int i = 0; i < SystemState.machines3[machine3Index].bufferSize; i++)
+            {
+                sputteringTime += randomExpDist(10);
+                lacquerCoatingTime += randomExpDist(6);
+                delay += (DvdStalls() * 5 * 60);
+            }
             
-            
-            double time = GeneralTime.MasterTime + sputteringTime + lacquerCoatingTime + dryingTime;
-            return time;
+            double time = sputteringTime + lacquerCoatingTime + dryingTime + delay;
+            return GeneralTime.MasterTime + time;
+        }
+
+        private int DvdStalls()
+        {
+            Random R = new Random();
+            int i = R.Next(100);
+            if (i < 3)
+                return 1;
+            else
+                return 0;
         }
 
         public override void HandleEvent()

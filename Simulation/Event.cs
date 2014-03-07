@@ -88,5 +88,13 @@ namespace Simulation
         {
             Console.WriteLine("generic event was handled");
         }
+
+        protected double randomExpDist(int lambda)
+        {
+            Random R = new Random();
+            double y = R.NextDouble();
+            double x = (Math.Log(1 - y)) * (-lambda);
+            return x;
+        }
     }
 }

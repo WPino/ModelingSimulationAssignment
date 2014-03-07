@@ -42,9 +42,8 @@ namespace Simulation
         // calculate when new Event of type DvdFinishedEvent will happen
         public override double CalculateEventTime()
         {
-            // read from processing times (exponential distribution)
-            // for now we use the random number from the fake method
-            return PlanWhenEventFinished();
+            // read from processing times (exponential distribution) argue why 60 is right
+            return GeneralTime.MasterTime + randomExpDist(60);
         }
 
 

@@ -22,7 +22,7 @@ namespace Simulation
 
         public override double CalculateEventTime()
         {
-            return GeneralTime.MasterTime + (500/*8 * 60 * 60*/);
+            return GeneralTime.MasterTime + randomExpDist(8*3600);
         }
 
 
