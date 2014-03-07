@@ -49,7 +49,7 @@ namespace Simulation
                 nr2machine1 = 3;
             }
             
-            SystemState.machines2[machine2Index].state = MachineState.State.idle;
+            SystemState.machines2[machine2Index].M2State = MachineState.State.idle;
             if (!DvdFails())
             {
                 SystemState.machines2[machine2Index].buffer3InclConveyorContent++;
@@ -57,35 +57,35 @@ namespace Simulation
             }
             if (SystemState.machines2[machine2Index].buffer3InclConveyorContent == SystemState.machines3[machine2Index].bufferSize)
             {
-                SystemState.machines2[machine2Index].state = MachineState.State.blocked;
+                SystemState.machines2[machine2Index].M2State = MachineState.State.blocked;
             }
             else if (SystemState.machines2[machine2Index].buffer.Count != 0)
             {
                 double startTimeDvdfromQ = SystemState.machines2[machine2Index].buffer.Dequeue();
                 SystemState.machines2[machine2Index].ScheduleDvdM2Finished(startTimeDvdfromQ);
-                SystemState.machines2[machine2Index].state = MachineState.State.busy;
+                SystemState.machines2[machine2Index].M2State = MachineState.State.busy;
 
                 // if the buffer before machine 2 is full except for one (or except for 2) and one machine is busy (or 2) then do nothing
                 if (!(SystemState.machines2[machine2Index].buffer.Count == SystemState.machines2[machine2Index].bufferSize - 1 &&
-                    (SystemState.machines1[nr1machine1].state == MachineState.State.busy
-                    || SystemState.machines1[nr2machine1].state == MachineState.State.busy)))
+                    (SystemState.machines1[nr1machine1].M1State == MachineState.State.busy
+                    || SystemState.machines1[nr2machine1].M1State == MachineState.State.busy)))
                 {
                     if (!(SystemState.machines2[machine2Index].buffer.Count == SystemState.machines2[machine2Index].bufferSize - 2 &&
-                    (SystemState.machines1[nr1machine1].state == MachineState.State.busy
-                    && SystemState.machines1[nr2machine1].state == MachineState.State.busy)))
+                    (SystemState.machines1[nr1machine1].M1State == MachineState.State.busy
+                    && SystemState.machines1[nr2machine1].M1State == MachineState.State.busy)))
                     {
                         // if a machine is neither broken or busy, set it to busy and schedule a new event
-                        if (SystemState.machines1[nr1machine1].state != MachineState.State.busy &&
-                            SystemState.machines1[nr1machine1].state != MachineState.State.broken)
+                        if (SystemState.machines1[nr1machine1].M1State != MachineState.State.busy &&
+                            SystemState.machines1[nr1machine1].M1State != MachineState.State.broken)
                         {
                             SystemState.machines1[nr1machine1].ScheduleDvdM1Finished(GeneralTime.MasterTime);
-                            SystemState.machines1[nr1machine1].state = MachineState.State.busy;
+                            SystemState.machines1[nr1machine1].M1State = MachineState.State.busy;
                         }
-                        if (SystemState.machines1[nr2machine1].state != MachineState.State.busy &&
-                            SystemState.machines1[nr2machine1].state != MachineState.State.broken)
+                        if (SystemState.machines1[nr2machine1].M1State != MachineState.State.busy &&
+                            SystemState.machines1[nr2machine1].M1State != MachineState.State.broken)
                         {
                             SystemState.machines1[nr2machine1].ScheduleDvdM1Finished(GeneralTime.MasterTime);
-                            SystemState.machines1[nr2machine1].state = MachineState.State.busy;
+                            SystemState.machines1[nr2machine1].M1State = MachineState.State.busy;
                         }
                     }
                 }

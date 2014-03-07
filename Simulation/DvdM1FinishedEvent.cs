@@ -46,11 +46,8 @@ namespace Simulation
         // calculate when new Event of type DvdFinishedEvent will happen
         public override double CalculateEventTime()
         {
-            double startingTime = this.startTimeDvd;
-
-            // read from processing times (exponential distribution)
-            // for now we use the random number from the fake method
-            return PlanWhenEventFinished(startingTime);
+            // read from processing times (exponential distribution) argue why 60 is right
+            return GeneralTime.MasterTime + randomExpDist(60);
         }
 
 
@@ -78,30 +75,30 @@ namespace Simulation
             }
 
             // if machine 2 is idle schedule a dvdM2 finished event and set the M2 to busy, otherwise put in buffer
-            if (SystemState.machines2[prodLine].state == MachineState.State.idle)
+            if (SystemState.machines2[prodLine].M2State == MachineState.State.idle)
             {
                 SystemState.machines2[prodLine].ScheduleDvdM2Finished(startTimeDvd);
-                SystemState.machines2[prodLine].state = MachineState.State.busy;
+                SystemState.machines2[prodLine].M2State = MachineState.State.busy;
             }
             else
             {
                 SystemState.machines2[prodLine].buffer.Enqueue(startTimeDvd);
             }
             // if the buffer is full (or has one spot left which the other machine will fill) set to blocked (but don't if the machine is broken)
-            if (SystemState.machines1[machine1Index].state != MachineState.State.blocked &&
+            if (SystemState.machines1[machine1Index].M1State != MachineState.State.blocked &&
                 (SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize ||
                 ((SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize - 1) &&
-                (SystemState.machines1[otherMachine].state == MachineState.State.busy))))
+                (SystemState.machines1[otherMachine].M1State == MachineState.State.busy))))
             {
-                SystemState.machines1[machine1Index].state = MachineState.State.blocked;
+                SystemState.machines1[machine1Index].M1State = MachineState.State.blocked;
             }
 
             // if the machine is neither blocked nor broken, schedule new event and set to busy
-            if (SystemState.machines2[prodLine].state != MachineState.State.blocked && 
-                SystemState.machines2[prodLine].state != MachineState.State.broken)
+            if (SystemState.machines2[prodLine].M2State != MachineState.State.blocked && 
+                SystemState.machines2[prodLine].M2State != MachineState.State.broken)
             {
                 SystemState.machines1[machine1Index].ScheduleDvdM1Finished(GeneralTime.MasterTime);
-                SystemState.machines1[machine1Index].state = MachineState.State.busy;
+                SystemState.machines1[machine1Index].M1State = MachineState.State.busy;
             }
             
         }

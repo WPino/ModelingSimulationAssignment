@@ -40,8 +40,14 @@ namespace Simulation
         public static Machine4[] machines4;
 
         public static int totalDVDFinished { get; set; }
+        public static double averageThroughputTime { get; set; }
 
-        public static List<double> throughputTimes = new List<double>();
+        //public static List<double> throughputTimes = new List<double>();
+
+        public static void updateThroughputTime(double newThroughputTime)
+        {
+            averageThroughputTime = (((averageThroughputTime * (totalDVDFinished - 1)) + newThroughputTime) / totalDVDFinished);
+        }
     }
 
 
@@ -82,6 +88,7 @@ namespace Simulation
         int buffersize3 = 20;
         int buffersize4 = 20;
         double endTime = 400;
+
    
         static void Main(string[] args)
         {
@@ -106,10 +113,17 @@ namespace Simulation
                 Console.WriteLine("length {0}", EventList.eventList.Length);
                 Console.WriteLine("master time {0}", GeneralTime.MasterTime);
                 EventList.eventList.ReadFromHead();
+<<<<<<< HEAD
                 GeneralTime.MasterTime = EventList.eventList.HeadEvent.Time;
 
                 Console.ReadLine();
 
+=======
+                //GeneralTime.MasterTime = EventList.eventList.HeadEvent.Time;
+                //Console.WriteLine("Mastertime is {0}",GeneralTime.MasterTime);
+                //Console.ReadLine();
+                
+>>>>>>> 10356e0b4c036edae3f170151b442989e7a2a239
                 Event nextEvent = EventList.eventList.Remove();
                 //GeneralTime.MasterTime = nextEvent.Time;
                 nextEvent.HandleEvent();
@@ -173,7 +187,7 @@ namespace Simulation
             {
                 SystemState.machines1[i].ScheduleBreaksDown();
                 SystemState.machines1[i].ScheduleDvdM1Finished(GeneralTime.MasterTime);
-                SystemState.machines1[i].state = MachineState.State.busy;
+                SystemState.machines1[i].M1State = MachineState.State.busy;
             }
         }
 
@@ -220,13 +234,8 @@ namespace Simulation
             Console.WriteLine("Production per hour = {0}", prodHour);
             Console.WriteLine();
 
-            double avgThroughputTime, totalThroughputTime = 0;
-            for (int i = 0; i < SystemState.throughputTimes.Count; i++)
-            {
-                totalThroughputTime += SystemState.throughputTimes[i];
-            }
-            avgThroughputTime = totalThroughputTime / SystemState.totalDVDFinished;
-            Console.WriteLine("Average throughput time = {0}", avgThroughputTime);
+
+            Console.WriteLine("Average throughput time = {0}", SystemState.averageThroughputTime);
             Console.WriteLine();
 
             Console.WriteLine(" ========================= ");
