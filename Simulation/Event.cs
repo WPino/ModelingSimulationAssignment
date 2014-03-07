@@ -35,18 +35,6 @@ namespace Simulation
             set { previous = value; }
         }
 
-
-        // only checking on time!!!
-        /* dont need this method anymore
-        public int CompareTo(Event e)
-        {
-            if (time < e.time)
-                return 1;
-            else
-                return -1;
-        }
-        */ 
-
         public bool Equals(Event e)
         {
             if (this.time == e.time)
@@ -55,34 +43,34 @@ namespace Simulation
                 return false;
         }
 
-        public Event Add(Event newEvent)
-        {
-            if (/*this.CompareTo(newEvent)*/ this.Time - newEvent.Time >= 0)
-            {
-                newEvent.Next = this;
-                if (this.Prev != null)
-                {
-                    this.Prev.Next = newEvent;
-                    newEvent.Prev = this.Prev;
-                }
-                this.Prev = newEvent;
+        //public Event Add(Event newEvent)
+        //{
+        //    if (this.Time - newEvent.Time >= 0)
+        //    {
+        //        newEvent.Next = this;
+        //        if (this.Prev != null)
+        //        {
+        //            this.Prev.Next = newEvent;
+        //            newEvent.Prev = this.Prev;
+        //        }
+        //        this.Prev = newEvent;
 
-                return newEvent;
-            }
-            else
-            {
-                if (this.Next != null)
-                {
-                    this.Next.Add(newEvent);
-                }
-                else
-                {
-                    this.Next = newEvent;
-                    newEvent.Prev = this;
-                }
-                return this;
-            }
-        }
+        //        return newEvent;
+        //    }
+        //    else
+        //    {
+        //        if (this.Next != null)
+        //        {
+        //            this.Next.Add(newEvent);
+        //        }
+        //        else
+        //        {
+        //            this.Next = newEvent;
+        //            newEvent.Prev = this;
+        //        }
+        //        return this;
+        //    }
+        //}
 
         // should be overriden by all derived event class
         public virtual void PrintDetails()

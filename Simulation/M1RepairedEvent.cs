@@ -15,14 +15,14 @@ namespace Simulation
             get { return machine1Index; }
             set
             {
-                if (value == 1 || value == 2
-                    || value == 3 || value == 4)
+                if (value == 0 || value == 1
+                    || value == 2 || value == 3)
                 {
                     machine1Index = value;
                 }
                 else
                 {
-                    throw new Exception(String.Format("We do not have a Machine1{0}", machine1Index));
+                    throw new Exception(String.Format("We do not have a Machine1 {0}", machine1Index));
                 }
             }
         }
@@ -50,7 +50,7 @@ namespace Simulation
 
         public override double CalculateEventTime()
         {
-            return GeneralTime.MasterTime + (2 * 60 * 60);
+            return GeneralTime.MasterTime + (/*2 * 60 * 60*/ 20);
         }
 
         public override void HandleEvent()

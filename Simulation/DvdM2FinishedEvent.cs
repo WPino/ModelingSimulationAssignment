@@ -74,7 +74,7 @@ namespace Simulation
                     (SystemState.machines1[nr1machine1].state == MachineState.State.busy
                     && SystemState.machines1[nr2machine1].state == MachineState.State.busy)))
                     {
-                        // if a machine is neither broken or blocked, set it to busy and schedule a new event
+                        // if a machine is neither broken or busy, set it to busy and schedule a new event
                         if (SystemState.machines1[nr1machine1].state != MachineState.State.busy &&
                             SystemState.machines1[nr1machine1].state != MachineState.State.broken)
                         {

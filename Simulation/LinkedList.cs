@@ -28,30 +28,45 @@ namespace Simulation
 
         public void Add(Event e)
         {
-            if (e != null && IsEmpty())
+            if (IsEmpty())
             {
-                //e.PrintDetails();
-                //Console.WriteLine("details, list is empty");
-                //Console.ReadLine();
-
                 headEvent = e;
-                endEvent = e;
                 length++;
             }
-            else if(e != null)
+            else
             {
-                headEvent = headEvent.Add(e);
-                // this was needed to make the linked list loop
-                // head node points to the endnode and vice versa
-                // but we do not need that
-                /*if (e.Next == null)
+                bool lastEvent = false;
+                Event temp = headEvent;
+                while (e.Time - temp.Time >= 0)
                 {
-                    
-                    /*endEvent = e;
-                    endEvent.Next = headEvent;
-                    headEvent.Prev = endEvent;
-                     
-                }*/
+                    if (temp.Next != null)
+                    {
+                        temp = temp.Next;
+                    }
+                    else
+                    {
+                        temp.Next = e;
+                        e.Prev = temp;
+                        lastEvent = true;
+                        break;
+                    }
+                }
+
+                if (lastEvent != true)
+                {
+                    if (temp.Prev == null)
+                    {
+                        headEvent = e;
+                        e.Next = temp;
+                        temp.Prev = e;
+                    }
+                    else
+                    {
+                        temp.Prev.Next = e;
+                        e.Next = temp;
+                        temp.Prev = e;
+                    }
+                }
                 length++;
             }
         }
@@ -68,7 +83,7 @@ namespace Simulation
             {
                 Event tmp = headEvent;
                 Console.WriteLine(" ======== LINKED LIST ========");
-                for(int i = 0; i < length; i++)
+                while(tmp != null)
                 {
                     tmp.PrintDetails();
                     tmp = tmp.Next;
@@ -78,25 +93,6 @@ namespace Simulation
             }
         }
 
-        public void ReadFromRear()
-        {
-            Event end = endEvent;
-            if (IsEmpty())
-            {
-                Console.WriteLine("no items in list");
-            }
-            else
-            {
-                Event tmp = endEvent;
-                Console.WriteLine(" ======== LINKED LIST ========");
-                for (int i = 0; i < length; i++)
-			    {
-			        tmp.PrintDetails();
-                    tmp = tmp.Prev;
-                }
-                Console.WriteLine(" =============================");
-            }
-        }
 
         public int GetLength()
         {
@@ -112,7 +108,6 @@ namespace Simulation
 
         public bool Contains(Event e)
         {
-            // override : overloaod Equals to check for time and event type
             Event tmp = headEvent;
             for (int i = 0; i < length; i++)
             {
@@ -126,13 +121,10 @@ namespace Simulation
             return false;
         }
 
-        // we want to delete the first node
         public Event Remove()
         {
             Event temp = headEvent;
             headEvent = headEvent.Next;
-            headEvent.Prev = endEvent;
-            endEvent.Next = headEvent;
 
             length--;
             return temp;

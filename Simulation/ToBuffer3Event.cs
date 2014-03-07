@@ -43,7 +43,7 @@ namespace Simulation
             {
                 if (SystemState.machines3[0].state == MachineState.State.idle && SystemState.machines4[0].buffer.Count == 0)
                 {
-                    Queue<double> newBatch = SystemState.machines3[machine3Index].buffer; //Should this be a clone?
+                    Queue<double> newBatch = new Queue<double> (SystemState.machines3[machine3Index].buffer); //Should this be a clone?
                     SystemState.machines3[0].ScheduleBatchM3Finished(newBatch);
                     SystemState.machines3[machine3Index].buffer.Clear();
                     SystemState.machines2[machine3Index].buffer3InclConveyorContent = 0;

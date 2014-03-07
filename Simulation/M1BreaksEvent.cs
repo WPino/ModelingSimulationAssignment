@@ -31,7 +31,7 @@ namespace Simulation
 
         public override double CalculateEventTime()
         {
-            return GeneralTime.MasterTime + (8 * 60 * 60);
+            return GeneralTime.MasterTime + (50/*8 * 60 * 60*/);
         }
 
         
