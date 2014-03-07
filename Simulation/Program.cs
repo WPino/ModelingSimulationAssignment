@@ -81,16 +81,19 @@ namespace Simulation
         int buffersize2 = 20;
         int buffersize3 = 20;
         int buffersize4 = 20;
-        double endTime = 100;
+        double endTime = 400;
    
         static void Main(string[] args)
         {
             Program p = new Program();
+            GeneralTime.MasterTime = 0;
             p.Initialisation();
 
+            
+//            EventList.eventList.ReadFromHead();
 
             p.Run();
-            p.Analyze();
+            //p.Analyze();
 
             Console.ReadLine();
         }
@@ -100,14 +103,18 @@ namespace Simulation
             
             while (EventList.eventList.HeadEvent.Time < endTime)
 	        {
+                Console.WriteLine("length {0}", EventList.eventList.Length);
+                Console.WriteLine("master time {0}", GeneralTime.MasterTime);
                 EventList.eventList.ReadFromHead();
-                
-                
+                GeneralTime.MasterTime = EventList.eventList.HeadEvent.Time;
+
+                Console.ReadLine();
+
                 Event nextEvent = EventList.eventList.Remove();
-                GeneralTime.MasterTime = nextEvent.Time;
+                //GeneralTime.MasterTime = nextEvent.Time;
                 nextEvent.HandleEvent();
 
-
+                
                 
             }
 
@@ -124,12 +131,13 @@ namespace Simulation
 
             // schedule first events
             ScheduleEvents();
-            
 
         }
 
         public void InitialiseMachines()
         {
+            
+
             SystemState.machines1 = new Machine1[4];
             SystemState.machines2 = new Machine2[2];
             SystemState.machines3 = new Machine3[2];

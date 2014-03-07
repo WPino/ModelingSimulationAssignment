@@ -17,7 +17,6 @@ namespace Simulation
             machine1Index = index;
             this.Time = CalculateEventTime();
             EventList.eventList.Add(this);
-
         }
 
         public override void PrintDetails()

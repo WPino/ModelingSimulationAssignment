@@ -10,7 +10,7 @@ namespace Simulation
         private int machine1Index;
         private string eventType = "DvdM1FinishedEvent";
         double startTimeDvd;
-
+        Random rand = new Random(10);
 
 
         public DvdM1FinishedEvent(int index, double starttime)
@@ -25,26 +25,32 @@ namespace Simulation
             
             // adding event to the linkedlist
             EventList.eventList.Add(this);
-            
+
+
 	    }
 
 
         // I am not using the proper data but random number (just for experimentations)
-        public double PlanWhenEventFinished()
+        public double PlanWhenEventFinished(double startTime)
         {
 
             // dont really know how this random number Generator works but it seems to do the job;
-            Random rand = new Random();
-            double finished = GeneralTime.MasterTime + rand.Next(Math.Abs(Guid.NewGuid().GetHashCode()) % 100);
+            //Random rand = new Random();
+            //double finished = GeneralTime.MasterTime + rand.Next(Math.Abs(Guid.NewGuid().GetHashCode()) % 100);
+
+            double finished = GeneralTime.MasterTime + rand.Next(0, 100);
+            
             return finished;
         }
 
         // calculate when new Event of type DvdFinishedEvent will happen
         public override double CalculateEventTime()
         {
+            double startingTime = this.startTimeDvd;
+
             // read from processing times (exponential distribution)
             // for now we use the random number from the fake method
-            return PlanWhenEventFinished();
+            return PlanWhenEventFinished(startingTime);
         }
 
 

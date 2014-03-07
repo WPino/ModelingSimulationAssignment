@@ -8,6 +8,8 @@ namespace Simulation
     public class LinkedList
     {
         private Event headEvent = null;
+        private Event current = null;
+        private Event prev = null;
         private Event endEvent = null;
         private int length = 0;
 
@@ -18,6 +20,11 @@ namespace Simulation
         public Event EndEvent
         {
             get { return endEvent; }
+        }
+
+        public Event Current
+        {
+            get { return current; }
         }
 
         public int Length
@@ -54,7 +61,7 @@ namespace Simulation
 
                 if (lastEvent != true)
                 {
-                    if (temp.Prev == null)
+                    if (temp == headEvent)
                     {
                         headEvent = e;
                         e.Next = temp;
@@ -62,9 +69,12 @@ namespace Simulation
                     }
                     else
                     {
-                        temp.Prev.Next = e;
-                        e.Next = temp;
-                        temp.Prev = e;
+                        if (temp.Prev != null)
+                        {
+                            temp.Prev.Next = e;
+                            e.Next = temp;
+                            temp.Prev = e;
+                        }
                     }
                 }
                 length++;
@@ -81,15 +91,16 @@ namespace Simulation
             }
             else
             {
-                Event tmp = headEvent;
                 Console.WriteLine(" ======== LINKED LIST ========");
-                while(tmp != null)
+                head.PrintDetails();
+                
+                while (head.Next != null)
                 {
-                    tmp.PrintDetails();
-                    tmp = tmp.Next;
+                    head = head.Next;
+                    head.PrintDetails();
                 }
                 Console.WriteLine(" =============================");
-                
+                Console.WriteLine();
             }
         }
 
@@ -125,6 +136,8 @@ namespace Simulation
         {
             Event temp = headEvent;
             headEvent = headEvent.Next;
+            headEvent.Prev = null;
+
 
             length--;
             return temp;

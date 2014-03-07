@@ -43,34 +43,6 @@ namespace Simulation
                 return false;
         }
 
-        //public Event Add(Event newEvent)
-        //{
-        //    if (this.Time - newEvent.Time >= 0)
-        //    {
-        //        newEvent.Next = this;
-        //        if (this.Prev != null)
-        //        {
-        //            this.Prev.Next = newEvent;
-        //            newEvent.Prev = this.Prev;
-        //        }
-        //        this.Prev = newEvent;
-
-        //        return newEvent;
-        //    }
-        //    else
-        //    {
-        //        if (this.Next != null)
-        //        {
-        //            this.Next.Add(newEvent);
-        //        }
-        //        else
-        //        {
-        //            this.Next = newEvent;
-        //            newEvent.Prev = this;
-        //        }
-        //        return this;
-        //    }
-        //}
 
         // should be overriden by all derived event class
         public virtual void PrintDetails()
