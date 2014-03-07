@@ -28,8 +28,10 @@ namespace Simulation
         public override double CalculateEventTime()
         {
             // this is not the correct time
-            double time = GeneralTime.MasterTime + 15 * 60;
+            double time = GeneralTime.MasterTime + randomNormDist(15*60, 1*60);
             return time;
+
+
         }
 
         public override void HandleEvent()
