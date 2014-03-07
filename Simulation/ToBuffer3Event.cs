@@ -26,7 +26,7 @@ namespace Simulation
             // and add to EventList.eventList
         }
 
-        public double CalculateEventTime()
+        public override double CalculateEventTime()
         {
             double time = 5 * 60 + GeneralTime.MasterTime;
             return time;

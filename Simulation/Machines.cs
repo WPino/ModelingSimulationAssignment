@@ -317,7 +317,7 @@ namespace Simulation
 
         }
 
-        private void calculateDeviation()
+        public void calculateDeviation()
         {
             Random R = new Random();
             int value = R.Next(10);

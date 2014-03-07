@@ -25,7 +25,7 @@ namespace Simulation
         }
 
 
-        public double CalculateEventTime()
+        public override double CalculateEventTime()
         {
             double sputteringTime=40, lacquerCoatingTime=40, dryingTime=40; //completely arbitratry times, perhaps write method for each?
             
