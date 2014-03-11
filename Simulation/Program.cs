@@ -119,10 +119,18 @@ namespace Simulation
 
                 Console.ReadLine();
 
+<<<<<<< HEAD
                 //GeneralTime.MasterTime = EventList.eventList.HeadEvent.Time;
                 //Console.WriteLine("Mastertime is {0}",GeneralTime.MasterTime);
                 //Console.ReadLine();
 
+=======
+
+                //GeneralTime.MasterTime = EventList.eventList.HeadEvent.Time;
+                //Console.WriteLine("Mastertime is {0}",GeneralTime.MasterTime);
+                //Console.ReadLine();
+                
+>>>>>>> fa4b1beea6aa06294d33ee3a253f48e62830c15a
                 Event nextEvent = EventList.eventList.Remove();
                 //GeneralTime.MasterTime = nextEvent.Time;
                 nextEvent.HandleEvent();

@@ -67,5 +67,38 @@ namespace Simulation
             double x = (Math.Log(1 - y)) * (-lambda);
             return x;
         }
+
+        private static double BoxMuller()
+        {
+            bool uselast = true;
+            double next_gaussian = 0.0;
+            
+            if (uselast)
+            {
+                uselast = false;
+                return next_gaussian;
+            }
+            else
+            {
+                double v1, v2, s;
+                do
+                {
+                    v1 = 2.0 * SystemState.R.NextDouble() - 1.0;
+                    v2 = 2.0 * SystemState.R.NextDouble() - 1.0;
+                    s = v1 * v1 + v2 * v2;
+                } while (s >= 1.0 || s == 0);
+
+                s = System.Math.Sqrt((-2.0 * System.Math.Log(s)) / s);
+
+                next_gaussian = v2 * s;
+                uselast = true;
+                return v1 * s;
+            }
+        }
+
+        public static double randomNormDist(double mean, double standard_deviation)
+        {
+            return mean + BoxMuller() * standard_deviation;
+        }
     }
 }
