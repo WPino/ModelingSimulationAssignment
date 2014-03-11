@@ -33,11 +33,6 @@ namespace Simulation
         // I am not using the proper data but random number (just for experimentations)
         public double PlanWhenEventFinished(double startTime)
         {
-
-            // dont really know how this random number Generator works but it seems to do the job;
-            //Random rand = new Random();
-            //double finished = GeneralTime.MasterTime + rand.Next(Math.Abs(Guid.NewGuid().GetHashCode()) % 100);
-
             double finished = GeneralTime.MasterTime + rand.Next(0, 100);
             
             return finished;

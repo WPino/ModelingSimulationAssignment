@@ -33,6 +33,7 @@ namespace Simulation
 
     public static class SystemState
     {
+        public static Random R = new Random();
 
         public static Machine1[] machines1;
         public static Machine2[] machines2;
@@ -113,17 +114,15 @@ namespace Simulation
                 Console.WriteLine("length {0}", EventList.eventList.Length);
                 Console.WriteLine("master time {0}", GeneralTime.MasterTime);
                 EventList.eventList.ReadFromHead();
-<<<<<<< HEAD
+
                 GeneralTime.MasterTime = EventList.eventList.HeadEvent.Time;
 
                 Console.ReadLine();
 
-=======
                 //GeneralTime.MasterTime = EventList.eventList.HeadEvent.Time;
                 //Console.WriteLine("Mastertime is {0}",GeneralTime.MasterTime);
                 //Console.ReadLine();
-                
->>>>>>> 10356e0b4c036edae3f170151b442989e7a2a239
+
                 Event nextEvent = EventList.eventList.Remove();
                 //GeneralTime.MasterTime = nextEvent.Time;
                 nextEvent.HandleEvent();
