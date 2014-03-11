@@ -20,7 +20,8 @@ namespace Simulation
             this.Time = CalculateEventTime();
 
             // adding event to the linkedlist
-            EventList.eventList.Add(this);
+            //EventList.eventList.Add(this);
+            Program.AddNextNode(EventList.eventList, this);
 
         }
 

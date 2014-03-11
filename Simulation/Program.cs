@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 
 
-// new version ;p
+/* Using the C# linked list. Do not use the LinkedList class anymore. The linkedlist is still defined in the 
+    public static class. The new method: AddNextNode, RemoveFirst and Display are static method defined in the 
+    program class, so use Program.MethodName to use them*/ 
 
 namespace Simulation
 {
@@ -13,9 +15,6 @@ namespace Simulation
     public static class GeneralTime
     {
         private static double masterTime = 0;
-
-        // making sure time set is never negative
-        // or smaller than previous time.
 
         public static double MasterTime
         {
@@ -52,9 +51,6 @@ namespace Simulation
     }
 
 
-
-
-    // public static class to keep track of the state of the machines. Those can be updated in every class
     public static class MachineState
     {
         #region enums
@@ -71,13 +67,10 @@ namespace Simulation
 
 
 
-    // we can use this static class with static event list to 
-    // add our events to the list within the class
-    // so from the constructor of the event, the event can be added to the list.
-
     public static class EventList
     {
-        public static LinkedList eventList = new LinkedList();
+        //public static LinkedList eventList = new LinkedList();
+        public static LinkedList<Event> eventList = new LinkedList<Event>();
     }
 
            
@@ -88,7 +81,7 @@ namespace Simulation
         int buffersize2 = 20;
         int buffersize3 = 20;
         int buffersize4 = 20;
-        double endTime = 400;
+        double endTime = 100;
 
    
         static void Main(string[] args)
@@ -97,41 +90,33 @@ namespace Simulation
             GeneralTime.MasterTime = 0;
             p.Initialisation();
 
-            
-//            EventList.eventList.ReadFromHead();
 
             p.Run();
-            //p.Analyze();
+            p.Analyze();
 
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("DONE");
             Console.ReadLine();
         }
 
         public void Run()
         {
             
-            while (EventList.eventList.HeadEvent.Time < endTime)
+            while (EventList.eventList.First.Value.Time < endTime)
 	        {
-                Console.WriteLine("length {0}", EventList.eventList.Length);
+                Console.WriteLine("length {0}", EventList.eventList.Count);
                 Console.WriteLine("master time {0}", GeneralTime.MasterTime);
-                EventList.eventList.ReadFromHead();
+                Program.Display(EventList.eventList, "start");
+                GeneralTime.MasterTime = EventList.eventList.First.Value.Time;
 
-                GeneralTime.MasterTime = EventList.eventList.HeadEvent.Time;
-
-                Console.ReadLine();
-
-<<<<<<< HEAD
-                //GeneralTime.MasterTime = EventList.eventList.HeadEvent.Time;
-                //Console.WriteLine("Mastertime is {0}",GeneralTime.MasterTime);
                 //Console.ReadLine();
 
-=======
-
-                //GeneralTime.MasterTime = EventList.eventList.HeadEvent.Time;
-                //Console.WriteLine("Mastertime is {0}",GeneralTime.MasterTime);
-                //Console.ReadLine();
                 
->>>>>>> fa4b1beea6aa06294d33ee3a253f48e62830c15a
-                Event nextEvent = EventList.eventList.Remove();
+                //Event nextEvent = EventList.eventList.Remove();
+                Event nextEvent = Program.RemoveFirstNode(EventList.eventList);
+                
                 //GeneralTime.MasterTime = nextEvent.Time;
                 nextEvent.HandleEvent();
 
@@ -246,6 +231,61 @@ namespace Simulation
             Console.WriteLine();
 
             Console.WriteLine(" ========================= ");
+        }
+
+
+        public static void AddNextNode(LinkedList<Event> list, Event ev)
+        {
+
+            if (list.Count == 0)
+            {
+                list.AddFirst(ev);
+                return;
+            }
+            else
+            {
+                LinkedListNode<Event> fst = list.First;
+                LinkedListNode<Event> toReturn = fst;
+                bool found = false;
+                while (found == false)
+                {
+                    if (fst.Value.Time < ev.Time)
+                    {
+                        if (fst.Next != null)
+                        {
+                            fst = fst.Next;
+                        }
+                        else
+                        {
+                            found = true;
+                            list.AddLast(ev);
+                        }
+                    }
+                    else
+                    {
+                        found = true;
+                        list.AddBefore(fst, ev);
+                    }
+                }
+                return;
+            }
+        }
+
+        public static void Display(LinkedList<Event> words, string test)
+        {
+            Console.WriteLine(test);
+            foreach (Event e in words)
+            {
+                e.PrintDetails();
+                Console.WriteLine();
+            }
+        }
+
+        public static Event RemoveFirstNode(LinkedList<Event> list)
+        {
+            Event first = list.First.Value;
+            list.RemoveFirst();
+            return first;
         }
     }
 }

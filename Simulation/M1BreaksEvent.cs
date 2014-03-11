@@ -16,7 +16,8 @@ namespace Simulation
         {
             machine1Index = index;
             this.Time = CalculateEventTime();
-            EventList.eventList.Add(this);
+            //EventList.eventList.Add(this);
+            Program.AddNextNode(EventList.eventList, this);
         }
 
         public override double CalculateEventTime()

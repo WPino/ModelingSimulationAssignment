@@ -7,6 +7,7 @@ namespace Simulation
 {
     public class LinkedList
     {
+        /*
         private Event headEvent = null;
         private Event current = null;
         private Event prev = null;
@@ -142,5 +143,7 @@ namespace Simulation
             length--;
             return temp;
         }
+        */ 
     }
+    
 }
