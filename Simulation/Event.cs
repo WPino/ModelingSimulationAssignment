@@ -65,7 +65,7 @@ namespace Simulation
         {
             //Random R = new Random();
             double y = SystemState.R.NextDouble();
-            double x = (Math.Log(1 - y)) * (-lambda);
+            double x = -(Math.Log(y)) * (lambda);
             return x;
         }
 

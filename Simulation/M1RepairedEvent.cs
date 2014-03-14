@@ -84,6 +84,9 @@ namespace Simulation
             }
             else
             {
+                //due to our design decisions this section is not completely accurate 
+                //This is because it is possible that while a M1 breaks and is repaired a Dvd is still in the making in the machine
+                //After this situation there will be 5 M1finished loops running, this will be corrected the next time the same machine breaks down
                 SystemState.machines1[machine1Index].ScheduleDvdM1Finished(GeneralTime.MasterTime);
                 SystemState.machines1[machine1Index].M1State = MachineState.State.busy;
             }
