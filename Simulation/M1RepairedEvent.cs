@@ -33,7 +33,7 @@ namespace Simulation
             M1Index = index;
             this.Time = CalculateEventTime();
 
-            EventList.eventList.Add(this);
+            Program.AddNextNode(EventList.eventList, this);
 
             // method to find time at which this event happens
             // and add to EventList.eventList

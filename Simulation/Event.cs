@@ -63,7 +63,6 @@ namespace Simulation
 
         protected double randomExpDist(int lambda)
         {
-            //Random R = new Random();
             double y = SystemState.R.NextDouble();
             double x = -(Math.Log(y)) * (lambda);
             return x;

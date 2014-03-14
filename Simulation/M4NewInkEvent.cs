@@ -19,10 +19,9 @@ namespace Simulation
             this.Time = CalculateEventTime();
 
             // adding event to the linkedlist
-            EventList.eventList.Add(this);
+           
+            Program.AddNextNode(EventList.eventList, this);
             
-            // method to find time at which this event happens
-            // and add to EventList.eventList
         }
 
         public override double CalculateEventTime()
