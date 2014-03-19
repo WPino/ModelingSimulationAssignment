@@ -10,7 +10,7 @@ namespace Simulation
         private int machine1Index;
         private string eventType = "DvdM1FinishedEvent";
         double startTimeDvd;
-        Random rand = new Random(10);
+        //Random rand = new Random(10);
 
 
         public DvdM1FinishedEvent(int index, double starttime)
@@ -31,18 +31,18 @@ namespace Simulation
 
 
         // I am not using the proper data but random number (just for experimentations)
-        public double PlanWhenEventFinished(double startTime)
+        /*public double PlanWhenEventFinished(double startTime)
         {
             double finished = GeneralTime.MasterTime + rand.Next(0, 100);
             
             return finished;
         }
-
+        */
         // calculate when new Event of type DvdFinishedEvent will happen
         public override double CalculateEventTime()
         {
             // read from processing times (exponential distribution) argue why 60 is right
-            return GeneralTime.MasterTime + randomExpDist(60);
+            return GeneralTime.MasterTime + randomExpDist(59.93954);
         }
 
 

@@ -32,7 +32,12 @@ namespace Simulation
             // same bs as in DvdM1finished
             
             Random rand = new Random();
-            double finished = GeneralTime.MasterTime + rand.Next(Math.Abs(Guid.NewGuid().GetHashCode()) % 100);
+            //double finished = GeneralTime.MasterTime + rand.Next(Math.Abs(Guid.NewGuid().GetHashCode()) % 100);
+
+            // using the gamma distribution. The shape and scale are found by fitting the model. 
+            // I did that using R, ill include it in the report.
+            double finished = GeneralTime.MasterTime + GammaDistribution(1.92185748, 1 / 0.07857608);
+            
             return finished;
         }
 

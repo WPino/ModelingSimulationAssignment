@@ -32,7 +32,9 @@ namespace Simulation
 
     public static class SystemState
     {
-        public static Random R = new Random();
+        // seeding R to always get the same random number. Easy for experimentations.
+        public static Random R = new Random(123);
+
 
         public static Machine1[] machines1;
         public static Machine2[] machines2;
@@ -81,15 +83,18 @@ namespace Simulation
         int buffersize2 = 20;
         int buffersize3 = 20;
         int buffersize4 = 20;
-        double endTime = 100;
+        double endTime = 50;
 
    
         static void Main(string[] args)
         {
-            Program p = new Program();
-            GeneralTime.MasterTime = 0;
-            p.Initialisation();
 
+            Program p = new Program();
+            
+            GeneralTime.MasterTime = 0;
+            
+            p.InitialiseMachines();
+            p.ScheduleEvents();
 
             p.Run();
             p.Analyze();
@@ -98,6 +103,8 @@ namespace Simulation
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("DONE");
+            
+            
             Console.ReadLine();
         }
 
@@ -108,16 +115,13 @@ namespace Simulation
 	        {
                 Console.WriteLine("length {0}", EventList.eventList.Count);
                 Console.WriteLine("master time {0}", GeneralTime.MasterTime);
-                Program.Display(EventList.eventList, "start");
+                Program.Display(EventList.eventList, "============");
                 GeneralTime.MasterTime = EventList.eventList.First.Value.Time;
 
-                //Console.ReadLine();
+                Console.ReadLine();
 
-                
-                //Event nextEvent = EventList.eventList.Remove();
                 Event nextEvent = Program.RemoveFirstNode(EventList.eventList);
                 
-                //GeneralTime.MasterTime = nextEvent.Time;
                 nextEvent.HandleEvent();
 
                 
@@ -125,18 +129,6 @@ namespace Simulation
             }
 
 
-
-        }
-
-        public void Initialisation()
-        {
-            
- 
-            // initialise all machines
-            InitialiseMachines();
-
-            // schedule first events
-            ScheduleEvents();
 
         }
 
@@ -209,13 +201,13 @@ namespace Simulation
             }
 
             Console.WriteLine("Percent of time the machines one are busy (on average per machine):");
-            Console.WriteLine("      {0} %", avgBusyTimeM1);
+            Console.WriteLine("      {0} %", avgBusyTimeM1*100);
             Console.WriteLine("Percent of time the machines two are busy (on average per machine):");
-            Console.WriteLine("      {0} %", avgBusyTimeM2);
+            Console.WriteLine("      {0} %", avgBusyTimeM2*100);
             Console.WriteLine("Percent of time the machines three are busy (on average per machine):");
-            Console.WriteLine("      {0} %", avgBusyTimeM3);
+            Console.WriteLine("      {0} %", avgBusyTimeM3*100);
             Console.WriteLine("Percent of time the machines four are busy (on average per machine):");
-            Console.WriteLine("      {0} %", avgBusyTimeM4);
+            Console.WriteLine("      {0} %", avgBusyTimeM4*100);
             Console.WriteLine();
 
             double prodHour = 0;
