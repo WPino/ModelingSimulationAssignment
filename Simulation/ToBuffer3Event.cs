@@ -9,12 +9,12 @@ namespace Simulation
     {
         private int machine3Index;
         private string eventType = "ToBuffer3Event";
-        double startTimeDvd;
         
-        public ToBuffer3Event(int index, double starttime)
+        
+        public ToBuffer3Event(int index)
         {
             machine3Index = index;
-            startTimeDvd = starttime;
+            
 
             // method calculating the time when the event will occur
             this.Time = CalculateEventTime();
@@ -30,50 +30,85 @@ namespace Simulation
 
         public override double CalculateEventTime()
         {
-            double time = GeneralTime.MasterTime + (5 * 60);
-            return time;
+            // if the queue is empty schedule the event in five minutes
+            // if it is not then the event is called from the front, schedule the event on time + diff between prev. and next
+            double time;
+            if (SystemState.machines2[machine3Index].onConveyor.Count == 0)
+            {
+                time = GeneralTime.MasterTime + (5 * 60);
+                return time;
+            }
+            else
+            {
+                double deltaTime = SystemState.machines2[machine3Index].timeDifferencesConveyor.Peek();
+                time = GeneralTime.MasterTime + deltaTime;
+                return time;
+            }
         }
 
         public override void HandleEvent()
         {
-            SystemState.machines3[machine3Index].buffer.Enqueue(startTimeDvd);
-
-            //if the buffer before machine three is full, look whether either of the machines three is idle with an empty buffer
-            // (very inefficient to wait untill the buffer behind it is completely empty....)
-            // if so, schedule new M3 finished event, clear the buffer
+            //the delay is counted twice, but this is trivial
             if (SystemState.machines3[machine3Index].buffer.Count == SystemState.machines3[machine3Index].bufferSize)
             {
-                if (SystemState.machines3[0].M3State == MachineState.State.idle && SystemState.machines4[0].buffer.Count == 0)
-                {
-                    Queue<double> newBatch = new Queue<double> (SystemState.machines3[machine3Index].buffer); //Should this be a clone?
-                    SystemState.machines3[0].ScheduleBatchM3Finished(newBatch);
-                    SystemState.machines3[machine3Index].buffer.Clear();
-                    SystemState.machines2[machine3Index].buffer3InclConveyorContent = 0;
-                    SystemState.machines3[0].M3State = MachineState.State.busy;
-                    //if M2 was blocked -> schedule new event from buffer
-                    if (SystemState.machines2[machine3Index].M2State == MachineState.State.blocked &&
-                        SystemState.machines2[machine3Index].buffer.Count != 0)
-                    {
-                        double startTimeDvdfromQ = SystemState.machines2[machine3Index].buffer.Dequeue();
-                        SystemState.machines2[machine3Index].ScheduleDvdM2Finished(startTimeDvdfromQ);
-                        SystemState.machines2[machine3Index].M2State = MachineState.State.busy;
-                    }
+                SystemState.machines2[machine3Index].M2State = MachineState.State.blocked;
+            }
+            else
+            {
+                //the time has been used but now has to be removed
+                SystemState.machines2[machine3Index].timeDifferencesConveyor.Dequeue();
+                //get the starttime of the new dvd
+                double startTimeDvd = SystemState.machines2[machine3Index].timeDifferencesConveyor.Dequeue();
+                SystemState.machines3[machine3Index].buffer.Enqueue(startTimeDvd);
 
-                }
-                else if (SystemState.machines3[1].M3State == MachineState.State.idle && SystemState.machines4[1].buffer.Count == 0)
+                // if the buffer before machine 3 is full and either of the machines 3 is neither busy or blocked, schedule new M3finished event
+                if (SystemState.machines3[machine3Index].buffer.Count == SystemState.machines3[machine3Index].bufferSize)
                 {
-                    Queue<double> newBatch = SystemState.machines3[machine3Index].buffer; //Should this be a clone?
-                    SystemState.machines3[1].ScheduleBatchM3Finished(newBatch);
+                    if (SystemState.machines3[0].M3State != MachineState.State.blocked &&
+                        SystemState.machines3[0].M3State != MachineState.State.busy)
+                    {
+                        SystemState.machines3[0].batch = new Queue<double>(SystemState.machines3[machine3Index].buffer); //Should this be a clone?
+                        SystemState.machines3[0].ScheduleBatchM3Finished();
+                        SystemState.machines3[machine3Index].buffer.Clear();
+                        SystemState.machines3[0].M3State = MachineState.State.busy;
+                        //if the conveyor is not empty schedule new to buffer 3 event
+                        if (SystemState.machines2[machine3Index].onConveyor.Count != 0)
+                        {
+                            SystemState.machines3[machine3Index].ScheduleDvdToBuffer3();
+                        }
+                        //if M2 was blocked and the buffer before machine 2 was not empty -> schedule new M2 finished event
+                        if (SystemState.machines2[machine3Index].M2State == MachineState.State.blocked &&
+                            SystemState.machines2[machine3Index].buffer.Count != 0)
+                        {
+                            double startTimeDvdfromQ = SystemState.machines2[machine3Index].buffer.Dequeue();
+                            SystemState.machines2[machine3Index].ScheduleDvdM2Finished(startTimeDvdfromQ);
+                            SystemState.machines2[machine3Index].M2State = MachineState.State.busy;
+
+                            SystemState.machines2[machine3Index].checkRebootMachines1();
+                        }
+                    }
+                }
+                else if (SystemState.machines3[1].M3State != MachineState.State.blocked &&
+                        SystemState.machines3[1].M3State != MachineState.State.busy)
+                {
+                    SystemState.machines3[1].batch = new Queue<double>(SystemState.machines3[machine3Index].buffer); //Should this be a clone?
+                    SystemState.machines3[1].ScheduleBatchM3Finished();
                     SystemState.machines3[machine3Index].buffer.Clear();
-                    SystemState.machines2[machine3Index].buffer3InclConveyorContent = 0;
                     SystemState.machines3[1].M3State = MachineState.State.busy;
-                    //if M2 was blocked -> schedule new event from buffer
+                    //if the conveyor is not empty schedule new to buffer 3 event
+                    if (SystemState.machines2[machine3Index].onConveyor.Count != 0)
+                    {
+                        SystemState.machines3[machine3Index].ScheduleDvdToBuffer3();
+                    }
+                    //if M2 was blocked and the buffer before machine 2 was not empty -> schedule new M2 finished event
                     if (SystemState.machines2[machine3Index].M2State == MachineState.State.blocked &&
                         SystemState.machines2[machine3Index].buffer.Count != 0)
                     {
                         double startTimeDvdfromQ = SystemState.machines2[machine3Index].buffer.Dequeue();
                         SystemState.machines2[machine3Index].ScheduleDvdM2Finished(startTimeDvdfromQ);
                         SystemState.machines2[machine3Index].M2State = MachineState.State.busy;
+
+                        SystemState.machines2[machine3Index].checkRebootMachines1();
                     }
                 }
             }

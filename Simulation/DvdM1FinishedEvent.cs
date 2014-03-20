@@ -76,14 +76,15 @@ namespace Simulation
             if (SystemState.machines1[machine1Index].M1State != MachineState.State.blocked &&
                 (SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize ||
                 ((SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize - 1) &&
-                (SystemState.machines1[otherMachine].M1State == MachineState.State.busy))))
+                (SystemState.machines1[otherMachine].M1State == MachineState.State.busy))) &&
+                SystemState.machines1[machine1Index].M1State != MachineState.State.broken)
             {
                 SystemState.machines1[machine1Index].M1State = MachineState.State.blocked;
             }
 
-            // if the machine is neither blocked nor broken, schedule new event and set to busy
-            if (SystemState.machines2[prodLine].M2State != MachineState.State.blocked && 
-                SystemState.machines2[prodLine].M2State != MachineState.State.broken)
+            // if the machine 1 is neither blocked nor broken, schedule new event and set to busy
+            if (SystemState.machines1[prodLine].M1State != MachineState.State.blocked && 
+                SystemState.machines1[prodLine].M1State != MachineState.State.broken)
             {
                 SystemState.machines1[machine1Index].ScheduleDvdM1Finished(GeneralTime.MasterTime);
                 SystemState.machines1[machine1Index].M1State = MachineState.State.busy;
