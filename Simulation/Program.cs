@@ -83,7 +83,7 @@ namespace Simulation
         int buffersize2 = 20;
         int buffersize3 = 20;
         int buffersize4 = 20;
-        double endTime = 50;
+        double endTime = 1000;
 
    
         static void Main(string[] args)
@@ -96,12 +96,37 @@ namespace Simulation
             p.InitialiseMachines();
             p.ScheduleEvents();
 
+            
+
+
             p.Run();
+
+
+            Console.WriteLine();
+            Console.WriteLine();
+
+
+            // set all states to idle to check if you get 100%
+            // without it, we do not have a final state change, which does not allow use to update the time of the previous state.
+            for (int i = 0; i < 4; i++)
+            {
+                SystemState.machines1[i].M1State = MachineState.State.idle;
+                if(i < 2)
+                {
+                    SystemState.machines2[i].M2State = MachineState.State.idle;
+                    SystemState.machines3[i].M3State = MachineState.State.idle;
+                    SystemState.machines4[i].M4State = MachineState.State.idle;
+                }
+            }
+
+
             p.Analyze();
 
+            p.IdleBusyBrokenBlockedTimes();
+            Console.WriteLine("MASTER TIME = {0}", GeneralTime.MasterTime);            
 
-            Console.WriteLine();
-            Console.WriteLine();
+
+
             Console.WriteLine("DONE");
             
             
@@ -118,7 +143,7 @@ namespace Simulation
                 Program.Display(EventList.eventList, "============");
                 GeneralTime.MasterTime = EventList.eventList.First.Value.Time;
 
-                Console.ReadLine();
+                //Console.ReadLine();
 
                 Event nextEvent = Program.RemoveFirstNode(EventList.eventList);
                 
@@ -128,7 +153,7 @@ namespace Simulation
                 
             }
 
-
+           
 
         }
 
@@ -193,13 +218,19 @@ namespace Simulation
 
             if (GeneralTime.MasterTime != 0)
             {
+
+                Console.WriteLine("BUSY TIME M10 {0}", SystemState.machines1[0].busytime);
+
                 avgBusyTimeM1 = (SystemState.machines1[0].busytime + SystemState.machines1[1].busytime +
                     SystemState.machines1[2].busytime + SystemState.machines1[3].busytime) / (GeneralTime.MasterTime * 4);
                 avgBusyTimeM2 = (SystemState.machines2[0].busytime + SystemState.machines2[1].busytime) / (GeneralTime.MasterTime * 2);
                 avgBusyTimeM3 = (SystemState.machines3[0].busytime + SystemState.machines3[1].busytime) / (GeneralTime.MasterTime * 2);
                 avgBusyTimeM4 = (SystemState.machines4[0].busytime + SystemState.machines4[1].busytime) / (GeneralTime.MasterTime * 2);
+
+
             }
 
+            
             Console.WriteLine("Percent of time the machines one are busy (on average per machine):");
             Console.WriteLine("      {0} %", avgBusyTimeM1*100);
             Console.WriteLine("Percent of time the machines two are busy (on average per machine):");
@@ -209,7 +240,9 @@ namespace Simulation
             Console.WriteLine("Percent of time the machines four are busy (on average per machine):");
             Console.WriteLine("      {0} %", avgBusyTimeM4*100);
             Console.WriteLine();
+            
 
+            
             double prodHour = 0;
             if (GeneralTime.MasterTime != 0)
             {
@@ -225,7 +258,7 @@ namespace Simulation
             Console.WriteLine(" ========================= ");
         }
 
-
+        #region Linkedlist
         public static void AddNextNode(LinkedList<Event> list, Event ev)
         {
 
@@ -278,6 +311,61 @@ namespace Simulation
             Event first = list.First.Value;
             list.RemoveFirst();
             return first;
+        }
+        #endregion
+
+        // prints the details of the idle, busy, broken and blocked times for all machines!
+        public void IdleBusyBrokenBlockedTimes()
+        {
+            // machines 1
+            for (int i = 0; i < 4; i++)
+            {
+                Console.WriteLine("Machine1[{0}]", i);
+                Console.WriteLine("idle time {0}", SystemState.machines1[i].idletime);
+                Console.WriteLine("busy time {0}", SystemState.machines1[i].busytime);
+                Console.WriteLine("blocked time {0}", SystemState.machines1[i].blockedtime);
+                Console.WriteLine("broken time {0}", SystemState.machines1[i].brokentime);
+                Console.WriteLine();
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
+
+            // machines 2
+            for (int i = 0; i < 2; i++)
+            {
+                Console.WriteLine("Machine2[{0}]", i);
+                Console.WriteLine("idle time {0}", SystemState.machines2[i].idletime);
+                Console.WriteLine("busy time {0}", SystemState.machines2[i].busytime);
+                Console.WriteLine("blocked time {0}", SystemState.machines2[i].blockedtime);
+                Console.WriteLine();
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
+
+            // machines 3
+            for (int i = 0; i < 2; i++)
+            {
+                Console.WriteLine("Machine3[{0}]", i);
+                Console.WriteLine("idle time {0}", SystemState.machines3[i].idletime);
+                Console.WriteLine("busy time {0}", SystemState.machines3[i].busytime);
+                Console.WriteLine("blocked time {0}", SystemState.machines3[i].blockedtime);
+                Console.WriteLine();
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
+
+            // machines 4
+            for (int i = 0; i < 2; i++)
+            {
+                Console.WriteLine("Machine4[{0}]", i);
+                Console.WriteLine("idle time {0}", SystemState.machines4[i].idletime);
+                Console.WriteLine("busy time {0}", SystemState.machines4[i].busytime);
+                Console.WriteLine("broken time {0}", SystemState.machines4[i].brokentime);
+                Console.WriteLine();
+            }
         }
     }
 }

@@ -30,14 +30,7 @@ namespace Simulation
 	    }
 
 
-        // I am not using the proper data but random number (just for experimentations)
-        /*public double PlanWhenEventFinished(double startTime)
-        {
-            double finished = GeneralTime.MasterTime + rand.Next(0, 100);
-            
-            return finished;
-        }
-        */
+        
         // calculate when new Event of type DvdFinishedEvent will happen
         public override double CalculateEventTime()
         {

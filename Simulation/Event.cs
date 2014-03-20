@@ -73,30 +73,17 @@ namespace Simulation
 
         private static double BoxMuller()
         {
-            bool uselast = true;
-            double next_gaussian = 0.0;
-            
-            if (uselast)
+            double v1, v2, s;
+            do
             {
-                uselast = false;
-                return next_gaussian;
-            }
-            else
-            {
-                double v1, v2, s;
-                do
-                {
-                    v1 = 2.0 * SystemState.R.NextDouble() - 1.0;
-                    v2 = 2.0 * SystemState.R.NextDouble() - 1.0;
-                    s = v1 * v1 + v2 * v2;
-                } while (s >= 1.0 || s == 0);
+                v1 = 2.0 * SystemState.R.NextDouble() - 1.0;
+                v2 = 2.0 * SystemState.R.NextDouble() - 1.0;
+                s = v1 * v1 + v2 * v2;
+            }while (s >= 1.0 || s == 0);
 
-                s = System.Math.Sqrt((-2.0 * Math.Log(s)) / s);
+            s = System.Math.Sqrt((-2.0 * Math.Log(s)) / s);
 
-                next_gaussian = v2 * s;
-                uselast = true;
-                return v1 * s;
-            }
+            return v1 * s;
         }
 
         public static double randomNormDist(double mean, double standard_deviation)

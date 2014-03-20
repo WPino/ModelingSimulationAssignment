@@ -17,21 +17,31 @@ namespace Simulation
         
 
 
-        protected double busyTime;
-        protected double idleTime;
-        protected double brokenTime;
-        protected double blockedTime;
+        protected double busyTime = 0;
+        protected double idleTime = 0;
+        protected double brokenTime = 0;
+        protected double blockedTime = 0;
 
-        public void IncreaseStateTime(int delta, string state)
+
+        // does not work
+        public void IncreaseStateTime(double delta, MachineState.State state)
         {
-            if (state == "busy")
+            if (state == MachineState.State.busy)
+            {
                 busyTime += delta;
-            if (state == "idle")
+            }
+            if (state == MachineState.State.idle)
+            {
                 idleTime += delta;
-            if (state == "broken")
+            }
+            if (state == MachineState.State.broken)
+            {
                 brokenTime += delta;
-            if (state == "blocked")
+            }
+            if (state == MachineState.State.blocked)
+            {
                 blockedTime += delta;
+            }
         }
 
         public double busytime { get { return busyTime; } }
@@ -70,27 +80,30 @@ namespace Simulation
                     || value == MachineState.State.blocked
                     || value == MachineState.State.idle)
                 {
-                    state = value;
+                    MachineState.State oldstate = state;
 
                     double recentStateChange = GeneralTime.MasterTime;
                     double deltaStateChange = recentStateChange - lastStateChange;
                     lastStateChange = recentStateChange;
 
-                    switch (value)
+                    switch (oldstate)
                     {
                         case MachineState.State.busy:
-                            busyTime += deltaStateChange;
+                            IncreaseStateTime(deltaStateChange, MachineState.State.busy);
                             break;
                         case MachineState.State.broken:
-                            brokenTime += deltaStateChange;
+                            IncreaseStateTime(deltaStateChange, MachineState.State.broken);
                             break;
                         case MachineState.State.blocked:
-                            blockedTime += deltaStateChange;
+                            IncreaseStateTime(deltaStateChange, MachineState.State.blocked);
+                            break;
+                        case MachineState.State.idle:
+                            IncreaseStateTime(deltaStateChange, MachineState.State.idle);
                             break;
                         default:
-                            idleTime += deltaStateChange;
                             break;
                     }
+                    state = value;
                 }
                 else
                 {
@@ -165,24 +178,31 @@ namespace Simulation
                     || value == MachineState.State.busy
                     || value == MachineState.State.blocked)
                 {
-                    state = value;
+                    //state = value;
+
+                    MachineState.State oldState = state;
 
                     double recentStateChange = GeneralTime.MasterTime;
                     double deltaStateChange = recentStateChange - lastStateChange;
                     lastStateChange = recentStateChange;
 
-                    switch (value)
+                    switch (oldState)
                     {
                         case MachineState.State.busy:
-                            busyTime += deltaStateChange;
+                            //busyTime += deltaStateChange;
+                            IncreaseStateTime(deltaStateChange, MachineState.State.busy);
                             break;
                         case MachineState.State.blocked:
-                            blockedTime += deltaStateChange;
+                            //blockedTime += deltaStateChange;
+                            IncreaseStateTime(deltaStateChange, MachineState.State.blocked);
+                            break;
+                        case MachineState.State.idle:
+                            IncreaseStateTime(deltaStateChange, MachineState.State.idle);
                             break;
                         default:
-                            idleTime += deltaStateChange;
                             break;
                     }
+                    state = value;
                 }
                 else
                 {
@@ -244,25 +264,29 @@ namespace Simulation
                     || value == MachineState.State.busy
                     || value == MachineState.State.blocked)
                 {
-                    state = value;
+                    //state = value;
 
+                    MachineState.State oldState = state;
 
                     double recentStateChange = GeneralTime.MasterTime;
                     double deltaStateChange = recentStateChange - lastStateChange;
                     lastStateChange = recentStateChange;
 
-                    switch (value)
+                    switch (oldState)
                     {
                         case MachineState.State.busy:
-                            busyTime += deltaStateChange;
+                            IncreaseStateTime(deltaStateChange, MachineState.State.busy);
                             break;
                         case MachineState.State.blocked:
-                            blockedTime += deltaStateChange;
+                            IncreaseStateTime(deltaStateChange, MachineState.State.blocked);
+                            break;
+                        case MachineState.State.idle:
+                            IncreaseStateTime(deltaStateChange, MachineState.State.idle);
                             break;
                         default:
-                            idleTime += deltaStateChange;
                             break;
                     }
+                    state = value;
                 }
                 else
                 {
@@ -331,24 +355,29 @@ namespace Simulation
                     || value == MachineState.State.busy
                     || value == MachineState.State.broken)
                 {
-                    state = value;
-                    
+                    //state = value;
+
+                    MachineState.State oldState = state;
+
                     double recentStateChange = GeneralTime.MasterTime;
                     double deltaStateChange = recentStateChange - lastStateChange;
                     lastStateChange = recentStateChange;
 
-                    switch (value)
+                    switch (oldState)
                     {
                         case MachineState.State.busy:
-                            busyTime += deltaStateChange;
+                            IncreaseStateTime(deltaStateChange, MachineState.State.busy);
                             break;
                         case MachineState.State.blocked:
-                            blockedTime += deltaStateChange;
+                            IncreaseStateTime(deltaStateChange, MachineState.State.blocked);
                             break;
+                        case MachineState.State.idle:
+                            IncreaseStateTime(deltaStateChange, MachineState.State.idle);
+                            break;;
                         default:
-                            idleTime += deltaStateChange;
                             break;
                     }
+                    state = value;
                 }
                 else
                 {
