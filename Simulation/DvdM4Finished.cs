@@ -38,6 +38,7 @@ namespace Simulation
             SystemState.totalDVDFinished++;
             SystemState.updateThroughputTime(GeneralTime.MasterTime - startTimeDvd);
 
+
             //if there are still dvds in the buffer, schedule a new newink or M4finished event
             if (SystemState.machines4[machine4Index].buffer.Count != 0)
             {
@@ -51,43 +52,42 @@ namespace Simulation
                     SystemState.machines4[machine4Index].ScheduleDvdM4Finished(startTimefromQ);
                 }
             }
-            else if (SystemState.machines3[machine4Index].M3State != MachineState.State.busy)
+
+            // check whether there is room in the buffer for a batch of machine 3
+            if (SystemState.machines3[machine4Index].bufferSize >= 
+                (SystemState.machines4[machine4Index].bufferSize - SystemState.machines4[machine4Index].buffer.Count))
             {
-                SystemState.machines3[machine4Index].M3State = MachineState.State.idle;
 
-                //if machine 3 is not idle check if either of the buffers are full, if so schedule a new M3batchfinished event
-                //also check if the M2 before was blocked and shedule a new event if so.
-                if (SystemState.machines3[0].buffer.Count == SystemState.machines3[0].bufferSize)
+                // check if machine 3 is blocked is if so unload batch DO FOR BOTH
+                // if it was idle before it cannot reboot now since that has nothing to do with space being available in the buffer after
+                if (SystemState.machines3[0].M3State == MachineState.State.blocked)
                 {
-                    Queue<double> newBatch = new Queue<double>(SystemState.machines3[0].buffer); //Should this be a clone?
-                    SystemState.machines3[machine4Index].ScheduleBatchM3Finished(newBatch);
-                    SystemState.machines3[0].buffer.Clear();
-                    SystemState.machines2[0].buffer3InclConveyorContent = 0;
-                    SystemState.machines3[machine4Index].M3State = MachineState.State.busy;
-                    //if M2 was blocked -> schedule new event from buffer
-                    if (SystemState.machines2[0].M2State == MachineState.State.blocked &&
-                        SystemState.machines2[0].buffer.Count != 0)
+                    // put que from batch in buffer 4
+                    while (SystemState.machines3[0].batch.Count != 0)
                     {
-                        double startTimeDvdfromQ = SystemState.machines2[0].buffer.Dequeue();
-                        SystemState.machines2[0].ScheduleDvdM2Finished(startTimeDvdfromQ);
-                        SystemState.machines2[0].M2State = MachineState.State.busy;
+                        double transfer = SystemState.machines3[0].batch.Dequeue();
+                        SystemState.machines4[machine4Index].buffer.Enqueue(transfer);
                     }
-
-                }
-                else if (SystemState.machines3[1].buffer.Count == SystemState.machines3[1].bufferSize)
-                {
-                    Queue<double> newBatch = new Queue<double>(SystemState.machines3[1].buffer); //Should this be a clone?
-                    SystemState.machines3[machine4Index].ScheduleBatchM3Finished(newBatch);
-                    SystemState.machines3[1].buffer.Clear();
-                    SystemState.machines2[1].buffer3InclConveyorContent = 0;
-                    SystemState.machines3[machine4Index].M3State = MachineState.State.busy;
-                    //if M2 was blocked -> schedule new event from buffer
-                    if (SystemState.machines2[1].M2State == MachineState.State.blocked &&
-                        SystemState.machines2[1].buffer.Count != 0)
+                    // if machine 3 is not busy it is now idle (since it is not blocked anymore either) 
+                    // check if it can be rebooted
+                    if (SystemState.machines3[0].M3State != MachineState.State.busy)
                     {
-                        double startTimeDvdfromQ = SystemState.machines2[0].buffer.Dequeue();
-                        SystemState.machines2[1].ScheduleDvdM2Finished(startTimeDvdfromQ);
-                        SystemState.machines2[1].M2State = MachineState.State.busy;
+                        SystemState.machines3[0].M3State = MachineState.State.idle;
+                        SystemState.machines3[0].checkRebootMachine3();
+                    }   
+                }
+                else if (SystemState.machines3[1].M3State == MachineState.State.blocked)
+                {
+                    // put que from batch in buffer 4
+                    while (SystemState.machines3[1].batch.Count != 0)
+                    {
+                        double transfer = SystemState.machines3[0].batch.Dequeue();
+                        SystemState.machines4[machine4Index].buffer.Enqueue(transfer);
+                    }
+                    if (SystemState.machines3[1].M3State != MachineState.State.busy)
+                    {
+                        SystemState.machines3[1].M3State = MachineState.State.idle;
+                        SystemState.machines3[1].checkRebootMachine3();
                     }
                 }
             }

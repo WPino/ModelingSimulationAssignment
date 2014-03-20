@@ -11,10 +11,9 @@ namespace Simulation
         private string eventType = "BatchM3FinishedEvent";
         Queue<double> startTimesDvds;
         
-        public BatchM3FinishedEvent(int index, Queue<double> starttimes)
+        public BatchM3FinishedEvent(int index)
         {
             machine3Index = index;
-            startTimesDvds = starttimes;
 
             // method calculating the time when the event will occur
             this.Time = CalculateEventTime();
@@ -53,21 +52,69 @@ namespace Simulation
 
         public override void HandleEvent()
         {
-            SystemState.machines4[machine3Index].buffer = new Queue<double>(startTimesDvds); //should we clone?
-            SystemState.machines3[machine3Index].M3State = MachineState.State.blocked;
+            //following hsa to happen for both machines 4
+            bool FirstSucceeded = false;
 
-            if (SystemState.machines4[machine3Index].M4State == MachineState.State.idle)
+            //if the buffer has no space for the batch, set machine to blocked
+            if (SystemState.machines3[machine3Index].bufferSize <
+                (SystemState.machines4[0].bufferSize - SystemState.machines4[0].buffer.Count))
             {
-                if (SystemState.machines4[machine3Index].inkCounter == 200 + SystemState.machines4[machine3Index].deviation)
-                {
-                    SystemState.machines4[machine3Index].ScheduleM4NewInk();
-                }
-                else
-                {
-                    double startTimefromQ = SystemState.machines4[machine3Index].buffer.Dequeue();
-                    SystemState.machines4[machine3Index].ScheduleDvdM4Finished(startTimefromQ);
-                }
+                SystemState.machines3[machine3Index].M3State = MachineState.State.blocked;
             }
+            else
+            {
+                FirstSucceeded = true;
+                while(SystemState.machines3[machine3Index].batch.Count != 0)
+                {
+                    double transfer = SystemState.machines3[machine3Index].batch.Dequeue();
+                    SystemState.machines4[0].buffer.Enqueue(transfer);
+                }
+                if (SystemState.machines4[0].M4State == MachineState.State.idle)
+                {
+                    if (SystemState.machines4[0].inkCounter == 200 + SystemState.machines4[0].deviation)
+                    {
+                        SystemState.machines4[0].ScheduleM4NewInk();
+                    }
+                    else
+                    {
+                        double startTimefromQ = SystemState.machines4[0].buffer.Dequeue();
+                        SystemState.machines4[0].ScheduleDvdM4Finished(startTimefromQ);
+                    }
+                }
+                SystemState.machines3[machine3Index].M3State = MachineState.State.idle;
+                SystemState.machines3[machine3Index].checkRebootMachine3();
+            }
+
+
+            if (!FirstSucceeded && SystemState.machines3[machine3Index].bufferSize <
+            (SystemState.machines4[1].bufferSize - SystemState.machines4[1].buffer.Count))
+            {
+                SystemState.machines3[machine3Index].M3State = MachineState.State.blocked;
+            }
+            else
+            {
+                FirstSucceeded = true;
+                while (SystemState.machines3[machine3Index].batch.Count != 0)
+                {
+                    double transfer = SystemState.machines3[machine3Index].batch.Dequeue();
+                    SystemState.machines4[1].buffer.Enqueue(transfer);
+                }
+                if (SystemState.machines4[1].M4State == MachineState.State.idle)
+                {
+                    if (SystemState.machines4[1].inkCounter == 200 + SystemState.machines4[1].deviation)
+                    {
+                        SystemState.machines4[1].ScheduleM4NewInk();
+                    }
+                    else
+                    {
+                        double startTimefromQ = SystemState.machines4[0].buffer.Dequeue();
+                        SystemState.machines4[0].ScheduleDvdM4Finished(startTimefromQ);
+                    }
+                }
+                SystemState.machines3[machine3Index].M3State = MachineState.State.idle;
+                SystemState.machines3[machine3Index].checkRebootMachine3();
+            }
+            
         }
 
         public override void PrintDetails()
