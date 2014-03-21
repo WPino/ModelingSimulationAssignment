@@ -46,15 +46,16 @@ namespace Simulation
             SystemState.machines2[machine2Index].M2State = MachineState.State.idle;
             if (!DvdFails())
             {
-                SystemState.machines2[machine2Index].onConveyor.Enqueue(startTimeDvd);
-                SystemState.machines2[machine2Index].timeDifferencesConveyor.Enqueue(
-                    GeneralTime.MasterTime - SystemState.machines2[machine2Index].lastToConveyor);
-                SystemState.machines2[machine2Index].lastToConveyor = GeneralTime.MasterTime;
 
                 if (SystemState.machines2[machine2Index].onConveyor.Count == 0)
                 {
                     SystemState.machines3[machine2Index].ScheduleDvdToBuffer3();
                 }
+
+                SystemState.machines2[machine2Index].onConveyor.Enqueue(startTimeDvd);
+                SystemState.machines2[machine2Index].timeDifferencesConveyor.Enqueue(
+                    GeneralTime.MasterTime - SystemState.machines2[machine2Index].lastToConveyor);
+                SystemState.machines2[machine2Index].lastToConveyor = GeneralTime.MasterTime;
             }
 
             

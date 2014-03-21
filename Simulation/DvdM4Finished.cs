@@ -45,6 +45,7 @@ namespace Simulation
                 if (SystemState.machines4[machine4Index].inkCounter == 200 + SystemState.machines4[machine4Index].deviation)
                 {
                     SystemState.machines4[machine4Index].ScheduleM4NewInk();
+                    SystemState.machines4[machine4Index].M4State = MachineState.State.broken;
                 }
                 else
                 {
@@ -52,7 +53,10 @@ namespace Simulation
                     SystemState.machines4[machine4Index].ScheduleDvdM4Finished(startTimefromQ);
                 }
             }
-
+            else
+            {
+                SystemState.machines4[machine4Index].M4State = MachineState.State.idle;
+            }
             // check whether there is room in the buffer for a batch of machine 3
             if (SystemState.machines3[machine4Index].bufferSize >= 
                 (SystemState.machines4[machine4Index].bufferSize - SystemState.machines4[machine4Index].buffer.Count))

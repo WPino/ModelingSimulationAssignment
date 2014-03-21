@@ -74,47 +74,52 @@ namespace Simulation
                     if (SystemState.machines4[0].inkCounter == 200 + SystemState.machines4[0].deviation)
                     {
                         SystemState.machines4[0].ScheduleM4NewInk();
+                        SystemState.machines4[0].M4State = MachineState.State.broken;
                     }
                     else
                     {
                         double startTimefromQ = SystemState.machines4[0].buffer.Dequeue();
                         SystemState.machines4[0].ScheduleDvdM4Finished(startTimefromQ);
+                        SystemState.machines4[0].M4State = MachineState.State.busy;
+
                     }
                 }
                 SystemState.machines3[machine3Index].M3State = MachineState.State.idle;
                 SystemState.machines3[machine3Index].checkRebootMachine3();
             }
 
-
-            if (!FirstSucceeded && SystemState.machines3[machine3Index].bufferSize <
-            (SystemState.machines4[1].bufferSize - SystemState.machines4[1].buffer.Count))
+            if (!FirstSucceeded)
             {
-                SystemState.machines3[machine3Index].M3State = MachineState.State.blocked;
-            }
-            else
-            {
-                FirstSucceeded = true;
-                while (SystemState.machines3[machine3Index].batch.Count != 0)
+                if (SystemState.machines3[machine3Index].bufferSize <
+                (SystemState.machines4[1].bufferSize - SystemState.machines4[1].buffer.Count))
                 {
-                    double transfer = SystemState.machines3[machine3Index].batch.Dequeue();
-                    SystemState.machines4[1].buffer.Enqueue(transfer);
+                    SystemState.machines3[machine3Index].M3State = MachineState.State.blocked;
                 }
-                if (SystemState.machines4[1].M4State == MachineState.State.idle)
+                else
                 {
-                    if (SystemState.machines4[1].inkCounter == 200 + SystemState.machines4[1].deviation)
+                    while (SystemState.machines3[machine3Index].batch.Count != 0)
                     {
-                        SystemState.machines4[1].ScheduleM4NewInk();
+                        double transfer = SystemState.machines3[machine3Index].batch.Dequeue();
+                        SystemState.machines4[1].buffer.Enqueue(transfer);
                     }
-                    else
+                    if (SystemState.machines4[1].M4State == MachineState.State.idle)
                     {
-                        double startTimefromQ = SystemState.machines4[0].buffer.Dequeue();
-                        SystemState.machines4[0].ScheduleDvdM4Finished(startTimefromQ);
+                        if (SystemState.machines4[1].inkCounter == 200 + SystemState.machines4[1].deviation)
+                        {
+                            SystemState.machines4[1].ScheduleM4NewInk();
+                            SystemState.machines4[1].M4State = MachineState.State.broken;
+                        }
+                        else
+                        {
+                            double startTimefromQ = SystemState.machines4[0].buffer.Dequeue();
+                            SystemState.machines4[1].ScheduleDvdM4Finished(startTimefromQ);
+                            SystemState.machines4[1].M4State = MachineState.State.busy;
+                        }
                     }
+                    SystemState.machines3[machine3Index].M3State = MachineState.State.idle;
+                    SystemState.machines3[machine3Index].checkRebootMachine3();
                 }
-                SystemState.machines3[machine3Index].M3State = MachineState.State.idle;
-                SystemState.machines3[machine3Index].checkRebootMachine3();
             }
-            
         }
 
         public override void PrintDetails()
