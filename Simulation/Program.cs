@@ -80,9 +80,9 @@ namespace Simulation
     class Program
     {
         
-        int buffersize2 = 20;
+        int buffersize2 = 200;
         int buffersize3 = 20;
-        int buffersize4 = 20;
+        int buffersize4 = 200;
         double endTime = 10000000;
 
    
@@ -206,6 +206,7 @@ namespace Simulation
 
             Console.WriteLine("Total Runtime is {0} seconds or {1} hours.", GeneralTime.MasterTime, (GeneralTime.MasterTime / 3600));
             Console.WriteLine();
+            Console.WriteLine("Total of {0} DVDs produced.", SystemState.totalDVDFinished);
 
             Console.WriteLine("Buffer two = {0}\nBuffer three = {1}\nBuffer four = {2}",
                 this.buffersize2, this.buffersize3, this.buffersize4);
@@ -249,7 +250,7 @@ namespace Simulation
             Console.WriteLine();
 
 
-            Console.WriteLine("Average throughput time = {0}", SystemState.averageThroughputTime);
+            Console.WriteLine("Average throughput time = {0} h", SystemState.averageThroughputTime / 3600);
             Console.WriteLine();
 
             Console.WriteLine(" ========================= ");
@@ -318,10 +319,10 @@ namespace Simulation
             for (int i = 0; i < 4; i++)
             {
                 Console.WriteLine("Machine1[{0}]", i);
-                Console.WriteLine("idle time {0}", SystemState.machines1[i].idletime);
-                Console.WriteLine("busy time {0}", SystemState.machines1[i].busytime);
-                Console.WriteLine("blocked time {0}", SystemState.machines1[i].blockedtime);
-                Console.WriteLine("broken time {0}", SystemState.machines1[i].brokentime);
+                Console.WriteLine("idle time {0}", SystemState.machines1[i].idletime / GeneralTime.MasterTime * 100);
+                Console.WriteLine("busy time {0}", SystemState.machines1[i].busytime / GeneralTime.MasterTime * 100);
+                Console.WriteLine("blocked time {0}", SystemState.machines1[i].blockedtime / GeneralTime.MasterTime * 100);
+                Console.WriteLine("broken time {0}", SystemState.machines1[i].brokentime / GeneralTime.MasterTime * 100); 
                 Console.WriteLine();
             }
 
@@ -332,9 +333,9 @@ namespace Simulation
             for (int i = 0; i < 2; i++)
             {
                 Console.WriteLine("Machine2[{0}]", i);
-                Console.WriteLine("idle time {0}", SystemState.machines2[i].idletime);
-                Console.WriteLine("busy time {0}", SystemState.machines2[i].busytime);
-                Console.WriteLine("blocked time {0}", SystemState.machines2[i].blockedtime);
+                Console.WriteLine("idle time {0}", SystemState.machines2[i].idletime / GeneralTime.MasterTime * 100);
+                Console.WriteLine("busy time {0}", SystemState.machines2[i].busytime / GeneralTime.MasterTime * 100);
+                Console.WriteLine("blocked time {0}", SystemState.machines2[i].blockedtime / GeneralTime.MasterTime * 100);
                 Console.WriteLine();
             }
 
@@ -345,9 +346,9 @@ namespace Simulation
             for (int i = 0; i < 2; i++)
             {
                 Console.WriteLine("Machine3[{0}]", i);
-                Console.WriteLine("idle time {0}", SystemState.machines3[i].idletime);
-                Console.WriteLine("busy time {0}", SystemState.machines3[i].busytime);
-                Console.WriteLine("blocked time {0}", SystemState.machines3[i].blockedtime);
+                Console.WriteLine("idle time {0}", SystemState.machines3[i].idletime / GeneralTime.MasterTime * 100);
+                Console.WriteLine("busy time {0}", SystemState.machines3[i].busytime / GeneralTime.MasterTime * 100);
+                Console.WriteLine("blocked time {0}", SystemState.machines3[i].blockedtime / GeneralTime.MasterTime * 100);
                 Console.WriteLine();
             }
 
@@ -358,9 +359,9 @@ namespace Simulation
             for (int i = 0; i < 2; i++)
             {
                 Console.WriteLine("Machine4[{0}]", i);
-                Console.WriteLine("idle time {0}", SystemState.machines4[i].idletime);
-                Console.WriteLine("busy time {0}", SystemState.machines4[i].busytime);
-                Console.WriteLine("broken time {0}", SystemState.machines4[i].brokentime);
+                Console.WriteLine("idle time {0}", SystemState.machines4[i].idletime / GeneralTime.MasterTime * 100);
+                Console.WriteLine("busy time {0}", SystemState.machines4[i].busytime / GeneralTime.MasterTime * 100);
+                Console.WriteLine("broken time {0}", SystemState.machines4[i].brokentime / GeneralTime.MasterTime * 100);
                 Console.WriteLine();
             }
         }

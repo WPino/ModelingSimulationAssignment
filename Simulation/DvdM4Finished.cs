@@ -28,7 +28,7 @@ namespace Simulation
         {
             //again completely arbitrary
             
-            return GeneralTime.MasterTime + 7; 
+            return GeneralTime.MasterTime + 25; 
         }
 
         public override void HandleEvent()
@@ -86,7 +86,7 @@ namespace Simulation
                     // put que from batch in buffer 4
                     while (SystemState.machines3[1].batch.Count != 0)
                     {
-                        double transfer = SystemState.machines3[0].batch.Dequeue();
+                        double transfer = SystemState.machines3[1].batch.Dequeue();
                         SystemState.machines4[machine4Index].buffer.Enqueue(transfer);
                     }
                     if (SystemState.machines3[1].M3State != MachineState.State.busy)

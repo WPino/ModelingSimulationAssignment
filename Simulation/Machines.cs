@@ -480,8 +480,8 @@ namespace Simulation
                         case MachineState.State.busy:
                             IncreaseStateTime(deltaStateChange, MachineState.State.busy);
                             break;
-                        case MachineState.State.blocked:
-                            IncreaseStateTime(deltaStateChange, MachineState.State.blocked);
+                        case MachineState.State.broken:
+                            IncreaseStateTime(deltaStateChange, MachineState.State.broken);
                             break;
                         case MachineState.State.idle:
                             IncreaseStateTime(deltaStateChange, MachineState.State.idle);
