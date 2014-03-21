@@ -71,6 +71,9 @@ namespace Simulation
                         SystemState.machines3[0].ScheduleBatchM3Finished();
                         SystemState.machines3[machine3Index].buffer.Clear();
                         SystemState.machines3[0].M3State = MachineState.State.busy;
+
+                        
+
                         //if the conveyor is not empty schedule new to buffer 3 event
                         if (SystemState.machines2[machine3Index].onConveyor.Count != 0)
                         {
@@ -95,6 +98,8 @@ namespace Simulation
                     SystemState.machines3[1].ScheduleBatchM3Finished();
                     SystemState.machines3[machine3Index].buffer.Clear();
                     SystemState.machines3[1].M3State = MachineState.State.busy;
+
+
                     //if the conveyor is not empty schedule new to buffer 3 event
                     if (SystemState.machines2[machine3Index].onConveyor.Count != 0)
                     {

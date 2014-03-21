@@ -83,7 +83,7 @@ namespace Simulation
         int buffersize2 = 20;
         int buffersize3 = 20;
         int buffersize4 = 20;
-        double endTime = 1000;
+        double endTime = 50000;
 
    
         static void Main(string[] args)
@@ -143,10 +143,15 @@ namespace Simulation
                 Program.Display(EventList.eventList, "============");
                 GeneralTime.MasterTime = EventList.eventList.First.Value.Time;
 
-                //Console.ReadLine();
+                Console.ReadLine();
 
                 Event nextEvent = Program.RemoveFirstNode(EventList.eventList);
-                
+
+                if (nextEvent is BatchM3FinishedEvent)
+                {
+                    Console.ReadLine();
+                }
+
                 nextEvent.HandleEvent();
 
                 
@@ -218,9 +223,6 @@ namespace Simulation
 
             if (GeneralTime.MasterTime != 0)
             {
-
-                Console.WriteLine("BUSY TIME M10 {0}", SystemState.machines1[0].busytime);
-
                 avgBusyTimeM1 = (SystemState.machines1[0].busytime + SystemState.machines1[1].busytime +
                     SystemState.machines1[2].busytime + SystemState.machines1[3].busytime) / (GeneralTime.MasterTime * 4);
                 avgBusyTimeM2 = (SystemState.machines2[0].busytime + SystemState.machines2[1].busytime) / (GeneralTime.MasterTime * 2);
