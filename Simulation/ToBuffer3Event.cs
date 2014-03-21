@@ -49,6 +49,7 @@ namespace Simulation
 
         public override void HandleEvent()
         {
+            Console.WriteLine();
             //the delay is counted twice, but this is trivial
             if (SystemState.machines3[machine3Index].buffer.Count == SystemState.machines3[machine3Index].bufferSize)
             {
@@ -68,7 +69,12 @@ namespace Simulation
                     if (SystemState.machines3[0].M3State != MachineState.State.blocked &&
                         SystemState.machines3[0].M3State != MachineState.State.busy)
                     {
-                        SystemState.machines3[0].batch = new Queue<double>(SystemState.machines3[machine3Index].buffer); //Should this be a clone?
+                        while (SystemState.machines3[machine3Index].buffer.Count != 0)
+                        {
+                            double transfer = SystemState.machines3[machine3Index].buffer.Dequeue();
+                            SystemState.machines3[0].batch.Enqueue(transfer);
+                        }
+                        
                         SystemState.machines3[0].ScheduleBatchM3Finished();
                         SystemState.machines3[machine3Index].buffer.Clear();
                         SystemState.machines3[0].M3State = MachineState.State.busy;
@@ -95,7 +101,13 @@ namespace Simulation
                 else if (SystemState.machines3[1].M3State != MachineState.State.blocked &&
                         SystemState.machines3[1].M3State != MachineState.State.busy)
                 {
-                    SystemState.machines3[1].batch = new Queue<double>(SystemState.machines3[machine3Index].buffer); //Should this be a clone?
+                    
+                    while (SystemState.machines3[machine3Index].buffer.Count != 0)
+                    {
+                        double transfer = SystemState.machines3[machine3Index].buffer.Dequeue();
+                        SystemState.machines3[1].batch.Enqueue(transfer);
+                    }
+                   
                     SystemState.machines3[1].ScheduleBatchM3Finished();
                     SystemState.machines3[machine3Index].buffer.Clear();
                     SystemState.machines3[1].M3State = MachineState.State.busy;

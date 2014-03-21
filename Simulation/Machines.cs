@@ -298,7 +298,7 @@ namespace Simulation
     {   
         private string type = "machine 3";
         private double lastStateChange = 0;
-        public Queue<double> batch;
+        public Queue<double> batch = new Queue<double>();
 
         public MachineState.State M3State
         {
