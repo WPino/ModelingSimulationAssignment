@@ -9,12 +9,13 @@ namespace Simulation
     {
         private int machine3Index;
         private string eventType = "ToBuffer3Event";
+        private bool scheduledFromM2;
         
         
-        public ToBuffer3Event(int index)
+        public ToBuffer3Event(int index, bool fromM2)
         {
             machine3Index = index;
-            
+            scheduledFromM2 = fromM2;
 
             // method calculating the time when the event will occur
             this.Time = CalculateEventTime();
@@ -33,7 +34,7 @@ namespace Simulation
             // if the queue is empty schedule the event in five minutes
             // if it is not then the event is called from the front, schedule the event on time + diff between prev. and next
             double time;
-            if (SystemState.machines2[machine3Index].onConveyor.Count == 0)
+            if (scheduledFromM2)
             {
                 time = GeneralTime.MasterTime + (5 * 60);
                 return time;
@@ -58,7 +59,7 @@ namespace Simulation
                 //the time has been used but now has to be removed
                 SystemState.machines2[machine3Index].timeDifferencesConveyor.Dequeue();
                 //get the starttime of the new dvd
-                double startTimeDvd = SystemState.machines2[machine3Index].timeDifferencesConveyor.Dequeue();
+                double startTimeDvd = SystemState.machines2[machine3Index].onConveyor.Dequeue();
                 SystemState.machines3[machine3Index].buffer.Enqueue(startTimeDvd);
 
                 // if the buffer before machine 3 is full and either of the machines 3 is neither busy or blocked, schedule new M3finished event
@@ -77,7 +78,7 @@ namespace Simulation
                         //if the conveyor is not empty schedule new to buffer 3 event
                         if (SystemState.machines2[machine3Index].onConveyor.Count != 0)
                         {
-                            SystemState.machines3[machine3Index].ScheduleDvdToBuffer3();
+                            SystemState.machines3[machine3Index].ScheduleDvdToBuffer3(false);
                         }
                         //if M2 was blocked and the buffer before machine 2 was not empty -> schedule new M2 finished event
                         if (SystemState.machines2[machine3Index].M2State == MachineState.State.blocked &&
@@ -103,8 +104,9 @@ namespace Simulation
                     //if the conveyor is not empty schedule new to buffer 3 event
                     if (SystemState.machines2[machine3Index].onConveyor.Count != 0)
                     {
-                        SystemState.machines3[machine3Index].ScheduleDvdToBuffer3();
+                        SystemState.machines3[machine3Index].ScheduleDvdToBuffer3(false);
                     }
+
                     //if M2 was blocked and the buffer before machine 2 was not empty -> schedule new M2 finished event
                     if (SystemState.machines2[machine3Index].M2State == MachineState.State.blocked &&
                         SystemState.machines2[machine3Index].buffer.Count != 0)

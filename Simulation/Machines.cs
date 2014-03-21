@@ -366,9 +366,9 @@ namespace Simulation
         }
 
 
-        public void ScheduleDvdToBuffer3()
+        public void ScheduleDvdToBuffer3(bool fromM2)
         {
-            ToBuffer3Event toBuffer3 = new ToBuffer3Event(M3Index);
+            ToBuffer3Event toBuffer3 = new ToBuffer3Event(M3Index, fromM2);
         }
 
         public void ScheduleBatchM3Finished()
@@ -394,7 +394,7 @@ namespace Simulation
                     //if the conveyor is not empty schedule new to buffer 3 event
                     if (SystemState.machines2[0].onConveyor.Count != 0)
                     {
-                        SystemState.machines3[0].ScheduleDvdToBuffer3();
+                        SystemState.machines3[0].ScheduleDvdToBuffer3(false);
                     }
                     //if M2 was blocked and the buffer before machine 2 was not empty -> schedule new M2 finished event
                     if (SystemState.machines2[0].M2State == MachineState.State.blocked &&
@@ -417,7 +417,7 @@ namespace Simulation
                     //if the conveyor is not empty schedule new to buffer 3 event
                     if (SystemState.machines2[1].onConveyor.Count != 0)
                     {
-                        SystemState.machines3[1].ScheduleDvdToBuffer3();
+                        SystemState.machines3[1].ScheduleDvdToBuffer3(false);
                     }
                     //if M2 was blocked and the buffer before machine 2 was not empty -> schedule new M2 finished event
                     if (SystemState.machines2[1].M2State == MachineState.State.blocked &&
