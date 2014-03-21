@@ -83,7 +83,7 @@ namespace Simulation
         int buffersize2 = 20;
         int buffersize3 = 20;
         int buffersize4 = 20;
-        double endTime = 1000000;
+        double endTime = 100000;
 
    
         static void Main(string[] args)
@@ -135,25 +135,30 @@ namespace Simulation
 
         public void Run()
         {
-            
+
+            int counter = 0;
             while (EventList.eventList.First.Value.Time < endTime)
 	        {
                 //Console.WriteLine("length {0}", EventList.eventList.Count);
-                //Console.WriteLine("master time {0}", GeneralTime.MasterTime);
-                //Program.Display(EventList.eventList, "============");
+                Console.WriteLine("master time {0}", GeneralTime.MasterTime);
+                Program.Display(EventList.eventList, "============");
                 GeneralTime.MasterTime = EventList.eventList.First.Value.Time;
 
                 //Console.ReadLine();
 
                 Event nextEvent = Program.RemoveFirstNode(EventList.eventList);
-                
+
+                if (nextEvent is ToBuffer3Event)
+                {
+                    counter++;
+                }
                 nextEvent.HandleEvent();
 
                 
                 
             }
 
-           
+            Console.WriteLine("counter {0}", counter);
 
         }
 

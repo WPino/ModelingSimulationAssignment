@@ -51,6 +51,7 @@ namespace Simulation
                 {
                     double startTimefromQ = SystemState.machines4[machine4Index].buffer.Dequeue();
                     SystemState.machines4[machine4Index].ScheduleDvdM4Finished(startTimefromQ);
+                    SystemState.machines4[machine4Index].M4State = MachineState.State.busy;
                 }
             }
             else
