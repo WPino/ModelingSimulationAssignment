@@ -62,7 +62,13 @@ namespace Simulation
                 SystemState.machines2[machine2Index].lastToConveyor = GeneralTime.MasterTime;
             }
 
-            
+
+            if (SystemState.machines2[machine2Index].buffer.Count == 0 &&
+                    SystemState.machines2[machine2Index].M2State != MachineState.State.blocked)
+            {
+                SystemState.machines2[machine2Index].M2State = MachineState.State.idle;
+            }
+
             //If the buffer before machine 2 is not empty, and machine two is not blocked schedule a new event 
             if (SystemState.machines2[machine2Index].buffer.Count != 0 && 
                 SystemState.machines2[machine2Index].M2State != MachineState.State.blocked)
@@ -74,6 +80,7 @@ namespace Simulation
                 SystemState.machines2[machine2Index].checkRebootMachines1();
 
             }
+
         }
 
         private bool DvdFails()

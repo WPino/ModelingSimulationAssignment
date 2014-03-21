@@ -44,11 +44,18 @@ namespace Simulation
         public static int totalDVDFinished { get; set; }
         public static double averageThroughputTime { get; set; }
 
-        //public static List<double> throughputTimes = new List<double>();
+        private static int i = 0;
 
         public static void updateThroughputTime(double newThroughputTime)
         {
             averageThroughputTime = (((averageThroughputTime * (totalDVDFinished - 1)) + newThroughputTime) / totalDVDFinished);
+            
+            i++;
+            if (i % 10000 == 0)
+            {
+                Console.WriteLine("Throughput time = {0}", newThroughputTime);
+                Console.WriteLine("Average throughput time = {0}", averageThroughputTime);
+            }
         }
     }
 
@@ -80,9 +87,9 @@ namespace Simulation
     class Program
     {
         
-        int buffersize2 = 200;
+        int buffersize2 = 20;
         int buffersize3 = 20;
-        int buffersize4 = 200;
+        int buffersize4 = 20;
         double endTime = 10000000;
 
    
@@ -135,7 +142,8 @@ namespace Simulation
 
         public void Run()
         {
-            
+            int i = 0;
+
             while (EventList.eventList.First.Value.Time < endTime)
 	        {
                 //Console.WriteLine("length {0}", EventList.eventList.Count);
@@ -149,7 +157,9 @@ namespace Simulation
                 
                 nextEvent.HandleEvent();
 
-                
+                i++;
+                //if (i % 100 == 0)
+                    //Console.ReadLine();
                 
             }
 

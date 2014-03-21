@@ -36,8 +36,15 @@ namespace Simulation
             //update the inkCounter, the total amount of dvds finished and the throughput times
             SystemState.machines4[machine4Index].inkCounter++;
             SystemState.totalDVDFinished++;
-            SystemState.updateThroughputTime(GeneralTime.MasterTime - startTimeDvd);
-
+            double newThroughputTime = GeneralTime.MasterTime - startTimeDvd;
+            if (SystemState.totalDVDFinished % 1000 == 0)
+            {
+                Console.WriteLine("startTime {0} ending time {1}, \ndiff = {2}", startTimeDvd, GeneralTime.MasterTime, GeneralTime.MasterTime - startTimeDvd);
+                Console.ReadLine();
+            }
+            SystemState.updateThroughputTime(newThroughputTime);
+            //Console.WriteLine(newThroughputTime);
+            
 
             //if there are still dvds in the buffer, schedule a new newink or M4finished event
             if (SystemState.machines4[machine4Index].buffer.Count != 0)

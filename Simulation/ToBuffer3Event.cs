@@ -58,7 +58,7 @@ namespace Simulation
             {
                 SystemState.machines2[machine3Index].M2State = MachineState.State.blocked;
             }
-            else if (scheduledFromM2 || SystemState.machines2[machine3Index].onConveyor.Count != 0)
+            else if (/*scheduledFromM2 || */SystemState.machines2[machine3Index].onConveyor.Count != 0)
             {
                 //the time has been used but now has to be removed
                 SystemState.machines2[machine3Index].timeDifferencesConveyor.Dequeue();

@@ -402,14 +402,20 @@ namespace Simulation
                         SystemState.machines3[0].ScheduleDvdToBuffer3(false);
                     }
                     //if M2 was blocked and the buffer before machine 2 was not empty -> schedule new M2 finished event
-                    if (SystemState.machines2[0].M2State == MachineState.State.blocked &&
-                        SystemState.machines2[0].buffer.Count != 0)
+                    if (SystemState.machines2[0].M2State == MachineState.State.blocked)
                     {
-                        double startTimeDvdfromQ = SystemState.machines2[0].buffer.Dequeue();
-                        SystemState.machines2[0].ScheduleDvdM2Finished(startTimeDvdfromQ);
-                        SystemState.machines2[0].M2State = MachineState.State.busy;
+                        if (SystemState.machines2[0].buffer.Count != 0)
+                        {
+                            double startTimeDvdfromQ = SystemState.machines2[0].buffer.Dequeue();
+                            SystemState.machines2[0].ScheduleDvdM2Finished(startTimeDvdfromQ);
+                            SystemState.machines2[0].M2State = MachineState.State.busy;
 
-                        SystemState.machines2[0].checkRebootMachines1();
+                            SystemState.machines2[0].checkRebootMachines1();
+                        }
+                        else
+                        {
+                            SystemState.machines2[0].M2State = MachineState.State.idle;
+                        }
                     }
                 }
 
@@ -430,14 +436,20 @@ namespace Simulation
                         SystemState.machines3[1].ScheduleDvdToBuffer3(false);
                     }
                     //if M2 was blocked and the buffer before machine 2 was not empty -> schedule new M2 finished event
-                    if (SystemState.machines2[1].M2State == MachineState.State.blocked &&
-                        SystemState.machines2[1].buffer.Count != 0)
+                    if (SystemState.machines2[1].M2State == MachineState.State.blocked)
                     {
-                        double startTimeDvdfromQ = SystemState.machines2[1].buffer.Dequeue();
-                        SystemState.machines2[1].ScheduleDvdM2Finished(startTimeDvdfromQ);
-                        SystemState.machines2[1].M2State = MachineState.State.busy;
+                        if (SystemState.machines2[1].buffer.Count != 0)
+                        {
+                            double startTimeDvdfromQ = SystemState.machines2[1].buffer.Dequeue();
+                            SystemState.machines2[1].ScheduleDvdM2Finished(startTimeDvdfromQ);
+                            SystemState.machines2[1].M2State = MachineState.State.busy;
 
-                        SystemState.machines2[1].checkRebootMachines1();
+                            SystemState.machines2[1].checkRebootMachines1();
+                        }
+                        else
+                        {
+                            SystemState.machines2[1].M2State = MachineState.State.idle;
+                        }
                     }
                 }
             }
