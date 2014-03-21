@@ -387,7 +387,12 @@ namespace Simulation
                 {
                     firstSuccesfull = true;
 
-                    SystemState.machines3[M3Index].batch = new Queue<double>(SystemState.machines3[0].buffer); //Should this be a clone?
+                    while (SystemState.machines3[0].buffer.Count != 0)
+                    {
+                        double transfer = SystemState.machines3[0].buffer.Dequeue();
+                        SystemState.machines3[M3Index].batch.Enqueue(transfer);
+                    }
+                    
                     SystemState.machines3[M3Index].ScheduleBatchM3Finished();
                     SystemState.machines3[0].buffer.Clear();
                     SystemState.machines3[M3Index].M3State = MachineState.State.busy;
@@ -410,7 +415,12 @@ namespace Simulation
 
                 if (!firstSuccesfull && SystemState.machines3[1].buffer.Count == SystemState.machines3[M3Index].bufferSize)
                 {
-                    SystemState.machines3[M3Index].batch = new Queue<double>(SystemState.machines3[0].buffer); //Should this be a clone?
+                    while (SystemState.machines3[1].buffer.Count != 0)
+                    {
+                        double transfer = SystemState.machines3[1].buffer.Dequeue();
+                        SystemState.machines3[M3Index].batch.Enqueue(transfer);
+                    }
+                    
                     SystemState.machines3[M3Index].ScheduleBatchM3Finished();
                     SystemState.machines3[1].buffer.Clear();
                     SystemState.machines3[M3Index].M3State = MachineState.State.busy;
@@ -423,7 +433,7 @@ namespace Simulation
                     if (SystemState.machines2[1].M2State == MachineState.State.blocked &&
                         SystemState.machines2[1].buffer.Count != 0)
                     {
-                        double startTimeDvdfromQ = SystemState.machines2[0].buffer.Dequeue();
+                        double startTimeDvdfromQ = SystemState.machines2[1].buffer.Dequeue();
                         SystemState.machines2[1].ScheduleDvdM2Finished(startTimeDvdfromQ);
                         SystemState.machines2[1].M2State = MachineState.State.busy;
 

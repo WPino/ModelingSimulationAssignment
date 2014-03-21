@@ -14,9 +14,12 @@ namespace Simulation
         
         public ToBuffer3Event(int index, bool fromM2)
         {
+            
+   
             machine3Index = index;
             scheduledFromM2 = fromM2;
 
+            
             // method calculating the time when the event will occur
             this.Time = CalculateEventTime();
 
@@ -49,13 +52,13 @@ namespace Simulation
 
         public override void HandleEvent()
         {
-            Console.WriteLine();
+            
             //the delay is counted twice, but this is trivial
             if (SystemState.machines3[machine3Index].buffer.Count == SystemState.machines3[machine3Index].bufferSize)
             {
                 SystemState.machines2[machine3Index].M2State = MachineState.State.blocked;
             }
-            else
+            else if (scheduledFromM2 || SystemState.machines2[machine3Index].onConveyor.Count != 0)
             {
                 //the time has been used but now has to be removed
                 SystemState.machines2[machine3Index].timeDifferencesConveyor.Dequeue();
@@ -74,18 +77,51 @@ namespace Simulation
                             double transfer = SystemState.machines3[machine3Index].buffer.Dequeue();
                             SystemState.machines3[0].batch.Enqueue(transfer);
                         }
-                        
+
                         SystemState.machines3[0].ScheduleBatchM3Finished();
                         SystemState.machines3[machine3Index].buffer.Clear();
                         SystemState.machines3[0].M3State = MachineState.State.busy;
 
-                        
+
 
                         //if the conveyor is not empty schedule new to buffer 3 event
-                        if (SystemState.machines2[machine3Index].onConveyor.Count != 0)
+                        /*if (SystemState.machines2[machine3Index].onConveyor.Count != 0)
                         {
                             SystemState.machines3[machine3Index].ScheduleDvdToBuffer3(false);
+                        }*/
+                        //if M2 was blocked and the buffer before machine 2 was not empty -> schedule new M2 finished event
+                        if (SystemState.machines2[machine3Index].M2State == MachineState.State.blocked &&
+                            SystemState.machines2[machine3Index].buffer.Count != 0)
+                        {
+                            double startTimeDvdfromQ = SystemState.machines2[machine3Index].buffer.Dequeue();
+                            SystemState.machines2[machine3Index].ScheduleDvdM2Finished(startTimeDvdfromQ);
+                            SystemState.machines2[machine3Index].M2State = MachineState.State.busy;
+
+                            SystemState.machines2[machine3Index].checkRebootMachines1();
                         }
+                    }
+
+                    else if (SystemState.machines3[1].M3State != MachineState.State.blocked &&
+                            SystemState.machines3[1].M3State != MachineState.State.busy)
+                    {
+
+                        while (SystemState.machines3[machine3Index].buffer.Count != 0)
+                        {
+                            double transfer = SystemState.machines3[machine3Index].buffer.Dequeue();
+                            SystemState.machines3[1].batch.Enqueue(transfer);
+                        }
+
+                        SystemState.machines3[1].ScheduleBatchM3Finished();
+                        SystemState.machines3[machine3Index].buffer.Clear();
+                        SystemState.machines3[1].M3State = MachineState.State.busy;
+
+
+                        //if the conveyor is not empty schedule new to buffer 3 event
+                        /*if (SystemState.machines2[machine3Index].onConveyor.Count != 0)
+                        {
+                            SystemState.machines3[machine3Index].ScheduleDvdToBuffer3(false);
+                        }*/
+
                         //if M2 was blocked and the buffer before machine 2 was not empty -> schedule new M2 finished event
                         if (SystemState.machines2[machine3Index].M2State == MachineState.State.blocked &&
                             SystemState.machines2[machine3Index].buffer.Count != 0)
@@ -98,37 +134,10 @@ namespace Simulation
                         }
                     }
                 }
-                else if (SystemState.machines3[1].M3State != MachineState.State.blocked &&
-                        SystemState.machines3[1].M3State != MachineState.State.busy)
+                //if the conveyor is not empty schedule new to buffer 3 event
+                if (SystemState.machines2[machine3Index].onConveyor.Count != 0)
                 {
-                    
-                    while (SystemState.machines3[machine3Index].buffer.Count != 0)
-                    {
-                        double transfer = SystemState.machines3[machine3Index].buffer.Dequeue();
-                        SystemState.machines3[1].batch.Enqueue(transfer);
-                    }
-                   
-                    SystemState.machines3[1].ScheduleBatchM3Finished();
-                    SystemState.machines3[machine3Index].buffer.Clear();
-                    SystemState.machines3[1].M3State = MachineState.State.busy;
-
-
-                    //if the conveyor is not empty schedule new to buffer 3 event
-                    if (SystemState.machines2[machine3Index].onConveyor.Count != 0)
-                    {
-                        SystemState.machines3[machine3Index].ScheduleDvdToBuffer3(false);
-                    }
-
-                    //if M2 was blocked and the buffer before machine 2 was not empty -> schedule new M2 finished event
-                    if (SystemState.machines2[machine3Index].M2State == MachineState.State.blocked &&
-                        SystemState.machines2[machine3Index].buffer.Count != 0)
-                    {
-                        double startTimeDvdfromQ = SystemState.machines2[machine3Index].buffer.Dequeue();
-                        SystemState.machines2[machine3Index].ScheduleDvdM2Finished(startTimeDvdfromQ);
-                        SystemState.machines2[machine3Index].M2State = MachineState.State.busy;
-
-                        SystemState.machines2[machine3Index].checkRebootMachines1();
-                    }
+                    SystemState.machines3[machine3Index].ScheduleDvdToBuffer3(false);
                 }
             }
         }

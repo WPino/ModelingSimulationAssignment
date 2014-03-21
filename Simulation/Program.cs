@@ -83,7 +83,7 @@ namespace Simulation
         int buffersize2 = 20;
         int buffersize3 = 20;
         int buffersize4 = 20;
-        double endTime = 1000000;
+        double endTime = 10000000;
 
    
         static void Main(string[] args)

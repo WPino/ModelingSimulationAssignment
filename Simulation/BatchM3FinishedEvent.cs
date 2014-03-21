@@ -64,6 +64,7 @@ namespace Simulation
             else
             {
                 FirstSucceeded = true;
+
                 while(SystemState.machines3[machine3Index].batch.Count != 0)
                 {
                     double transfer = SystemState.machines3[machine3Index].batch.Dequeue();
