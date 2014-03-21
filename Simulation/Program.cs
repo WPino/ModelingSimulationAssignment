@@ -143,7 +143,7 @@ namespace Simulation
                 Program.Display(EventList.eventList, "============");
                 GeneralTime.MasterTime = EventList.eventList.First.Value.Time;
 
-                Console.ReadLine();
+                //Console.ReadLine();
 
                 Event nextEvent = Program.RemoveFirstNode(EventList.eventList);
 
