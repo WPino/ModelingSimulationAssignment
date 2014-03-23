@@ -64,6 +64,11 @@ namespace Simulation
             else
             {
                 FirstSucceeded = true;
+
+                Console.WriteLine("reading the machine3[{0}].batch", machine3Index);
+                SystemState.machines3[machine3Index].ReadQueue(SystemState.machines3[machine3Index].batch);
+                Console.ReadLine();
+
                 while(SystemState.machines3[machine3Index].batch.Count != 0)
                 {
                     double transfer = SystemState.machines3[machine3Index].batch.Dequeue();
@@ -78,6 +83,8 @@ namespace Simulation
                     }
                     else
                     {
+                        Console.WriteLine("probleme de queue");
+                        Console.ReadLine();
                         double startTimefromQ = SystemState.machines4[0].buffer.Dequeue();
                         SystemState.machines4[0].ScheduleDvdM4Finished(startTimefromQ);
                         SystemState.machines4[0].M4State = MachineState.State.busy;
