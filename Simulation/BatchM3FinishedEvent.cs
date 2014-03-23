@@ -56,7 +56,7 @@ namespace Simulation
             bool FirstSucceeded = false;
 
             //if the buffer has no space for the batch, set machine to blocked
-            if (SystemState.machines3[machine3Index].bufferSize <
+            if (SystemState.machines3[machine3Index].bufferSize >
                 (SystemState.machines4[0].bufferSize - SystemState.machines4[0].buffer.Count))
             {
                 SystemState.machines3[machine3Index].M3State = MachineState.State.blocked;
@@ -65,9 +65,12 @@ namespace Simulation
             {
                 FirstSucceeded = true;
 
+/*<<<<<<< HEAD
                 Console.WriteLine("reading the machine3[{0}].batch", machine3Index);
                 SystemState.machines3[machine3Index].ReadQueue(SystemState.machines3[machine3Index].batch);
                 Console.ReadLine();
+
+=======*/
 
                 while(SystemState.machines3[machine3Index].batch.Count != 0)
                 {
@@ -83,8 +86,6 @@ namespace Simulation
                     }
                     else
                     {
-                        Console.WriteLine("probleme de queue");
-                        Console.ReadLine();
                         double startTimefromQ = SystemState.machines4[0].buffer.Dequeue();
                         SystemState.machines4[0].ScheduleDvdM4Finished(startTimefromQ);
                         SystemState.machines4[0].M4State = MachineState.State.busy;
@@ -95,9 +96,9 @@ namespace Simulation
                 SystemState.machines3[machine3Index].checkRebootMachine3();
             }
 
-            if (!FirstSucceeded)
+            if (FirstSucceeded == false)
             {
-                if (SystemState.machines3[machine3Index].bufferSize <
+                if (SystemState.machines3[machine3Index].bufferSize >
                 (SystemState.machines4[1].bufferSize - SystemState.machines4[1].buffer.Count))
                 {
                     SystemState.machines3[machine3Index].M3State = MachineState.State.blocked;
@@ -118,7 +119,7 @@ namespace Simulation
                         }
                         else
                         {
-                            double startTimefromQ = SystemState.machines4[0].buffer.Dequeue();
+                            double startTimefromQ = SystemState.machines4[1].buffer.Dequeue();
                             SystemState.machines4[1].ScheduleDvdM4Finished(startTimefromQ);
                             SystemState.machines4[1].M4State = MachineState.State.busy;
                         }

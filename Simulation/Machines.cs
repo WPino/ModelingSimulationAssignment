@@ -142,7 +142,6 @@ namespace Simulation
         }
 
 
-        // constructor
         public Machine1(int index)
         {
             M1Index = index;
@@ -398,7 +397,12 @@ namespace Simulation
                 {
                     firstSuccesfull = true;
 
-                    SystemState.machines3[M3Index].batch = new Queue<double>(SystemState.machines3[0].buffer); //Should this be a clone?
+                    while (SystemState.machines3[0].buffer.Count != 0)
+                    {
+                        double transfer = SystemState.machines3[0].buffer.Dequeue();
+                        SystemState.machines3[M3Index].batch.Enqueue(transfer);
+                    }
+                    
                     SystemState.machines3[M3Index].ScheduleBatchM3Finished();
                     SystemState.machines3[0].buffer.Clear();
                     SystemState.machines3[M3Index].M3State = MachineState.State.busy;
@@ -408,20 +412,31 @@ namespace Simulation
                         SystemState.machines3[0].ScheduleDvdToBuffer3(false);
                     }
                     //if M2 was blocked and the buffer before machine 2 was not empty -> schedule new M2 finished event
-                    if (SystemState.machines2[0].M2State == MachineState.State.blocked &&
-                        SystemState.machines2[0].buffer.Count != 0)
+                    if (SystemState.machines2[0].M2State == MachineState.State.blocked)
                     {
-                        double startTimeDvdfromQ = SystemState.machines2[0].buffer.Dequeue();
-                        SystemState.machines2[0].ScheduleDvdM2Finished(startTimeDvdfromQ);
-                        SystemState.machines2[0].M2State = MachineState.State.busy;
+                        if (SystemState.machines2[0].buffer.Count != 0)
+                        {
+                            double startTimeDvdfromQ = SystemState.machines2[0].buffer.Dequeue();
+                            SystemState.machines2[0].ScheduleDvdM2Finished(startTimeDvdfromQ);
+                            SystemState.machines2[0].M2State = MachineState.State.busy;
 
-                        SystemState.machines2[0].checkRebootMachines1();
+                            SystemState.machines2[0].checkRebootMachines1();
+                        }
+                        else
+                        {
+                            SystemState.machines2[0].M2State = MachineState.State.idle;
+                        }
                     }
                 }
 
                 if (!firstSuccesfull && SystemState.machines3[1].buffer.Count == SystemState.machines3[M3Index].bufferSize)
                 {
-                    SystemState.machines3[M3Index].batch = new Queue<double>(SystemState.machines3[0].buffer); //Should this be a clone?
+                    while (SystemState.machines3[1].buffer.Count != 0)
+                    {
+                        double transfer = SystemState.machines3[1].buffer.Dequeue();
+                        SystemState.machines3[M3Index].batch.Enqueue(transfer);
+                    }
+                    
                     SystemState.machines3[M3Index].ScheduleBatchM3Finished();
                     SystemState.machines3[1].buffer.Clear();
                     SystemState.machines3[M3Index].M3State = MachineState.State.busy;
@@ -431,14 +446,20 @@ namespace Simulation
                         SystemState.machines3[1].ScheduleDvdToBuffer3(false);
                     }
                     //if M2 was blocked and the buffer before machine 2 was not empty -> schedule new M2 finished event
-                    if (SystemState.machines2[1].M2State == MachineState.State.blocked &&
-                        SystemState.machines2[1].buffer.Count != 0)
+                    if (SystemState.machines2[1].M2State == MachineState.State.blocked)
                     {
-                        double startTimeDvdfromQ = SystemState.machines2[0].buffer.Dequeue();
-                        SystemState.machines2[1].ScheduleDvdM2Finished(startTimeDvdfromQ);
-                        SystemState.machines2[1].M2State = MachineState.State.busy;
+                        if (SystemState.machines2[1].buffer.Count != 0)
+                        {
+                            double startTimeDvdfromQ = SystemState.machines2[1].buffer.Dequeue();
+                            SystemState.machines2[1].ScheduleDvdM2Finished(startTimeDvdfromQ);
+                            SystemState.machines2[1].M2State = MachineState.State.busy;
 
-                        SystemState.machines2[1].checkRebootMachines1();
+                            SystemState.machines2[1].checkRebootMachines1();
+                        }
+                        else
+                        {
+                            SystemState.machines2[1].M2State = MachineState.State.idle;
+                        }
                     }
                 }
             }
@@ -481,8 +502,8 @@ namespace Simulation
                         case MachineState.State.busy:
                             IncreaseStateTime(deltaStateChange, MachineState.State.busy);
                             break;
-                        case MachineState.State.blocked:
-                            IncreaseStateTime(deltaStateChange, MachineState.State.blocked);
+                        case MachineState.State.broken:
+                            IncreaseStateTime(deltaStateChange, MachineState.State.broken);
                             break;
                         case MachineState.State.idle:
                             IncreaseStateTime(deltaStateChange, MachineState.State.idle);
