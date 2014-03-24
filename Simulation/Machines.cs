@@ -61,6 +61,17 @@ namespace Simulation
         {
             Console.WriteLine("base class detail method");
         }
+
+
+        public void ReadQueue(Queue<double> queue)
+        {
+            Console.WriteLine("========");
+            for (int i = 0; i < queue.Count; i++)
+            {
+                Console.WriteLine(queue.Dequeue());
+            }
+            Console.WriteLine("========");
+        }
     }
 
     // derived class
@@ -131,7 +142,6 @@ namespace Simulation
         }
 
 
-        // constructor
         public Machine1(int index)
         {
             M1Index = index;

@@ -10,8 +10,6 @@ using System.Text;
 
 namespace Simulation
 {
-
-    // static class that allows us to update a general time in all classes
     public static class GeneralTime
     {
         private static double masterTime = 0;
@@ -32,7 +30,6 @@ namespace Simulation
 
     public static class SystemState
     {
-        // seeding R to always get the same random number. Easy for experimentations.
         public static Random R = new Random(123);
 
 
@@ -44,18 +41,11 @@ namespace Simulation
         public static int totalDVDFinished { get; set; }
         public static double averageThroughputTime { get; set; }
 
-        private static int i = 0;
+      
 
         public static void updateThroughputTime(double newThroughputTime)
         {
             averageThroughputTime = (((averageThroughputTime * (totalDVDFinished - 1)) + newThroughputTime) / totalDVDFinished);
-            
-            i++;
-            if (i % 10000 == 0)
-            {
-                Console.WriteLine("Throughput time = {0}", newThroughputTime);
-                Console.WriteLine("Average throughput time = {0}", averageThroughputTime);
-            }
         }
     }
 
@@ -78,7 +68,6 @@ namespace Simulation
 
     public static class EventList
     {
-        //public static LinkedList eventList = new LinkedList();
         public static LinkedList<Event> eventList = new LinkedList<Event>();
     }
 
@@ -90,7 +79,9 @@ namespace Simulation
         int buffersize2 = 20;
         int buffersize3 = 20;
         int buffersize4 = 20;
-        double endTime = 10000000;
+
+        double endTime = 100000;
+
 
    
         static void Main(string[] args)
@@ -130,8 +121,6 @@ namespace Simulation
             p.Analyze();
 
             p.IdleBusyBrokenBlockedTimes();
-            Console.WriteLine("MASTER TIME = {0}", GeneralTime.MasterTime);            
-
 
 
             Console.WriteLine("DONE");
@@ -142,28 +131,18 @@ namespace Simulation
 
         public void Run()
         {
-            int i = 0;
-
             while (EventList.eventList.First.Value.Time < endTime)
 	        {
                 //Console.WriteLine("length {0}", EventList.eventList.Count);
                 //Console.WriteLine("master time {0}", GeneralTime.MasterTime);
                 //Program.Display(EventList.eventList, "============");
-                GeneralTime.MasterTime = EventList.eventList.First.Value.Time;
-
-                //Console.ReadLine();
-
-                Event nextEvent = Program.RemoveFirstNode(EventList.eventList);
                 
+                GeneralTime.MasterTime = EventList.eventList.First.Value.Time;
+                Event nextEvent = Program.RemoveFirstNode(EventList.eventList);
                 nextEvent.HandleEvent();
 
-                i++;
-                //if (i % 100 == 0)
-                    //Console.ReadLine();
                 
             }
-
-           
 
         }
 
