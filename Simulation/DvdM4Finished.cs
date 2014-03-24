@@ -37,11 +37,11 @@ namespace Simulation
             SystemState.machines4[machine4Index].inkCounter++;
             SystemState.totalDVDFinished++;
             double newThroughputTime = GeneralTime.MasterTime - startTimeDvd;
-            if (SystemState.totalDVDFinished % 1000 == 0)
+            /*if (SystemState.totalDVDFinished % 1000 == 0)
             {
                 Console.WriteLine("startTime {0} ending time {1}, \ndiff = {2}", startTimeDvd, GeneralTime.MasterTime, GeneralTime.MasterTime - startTimeDvd);
                 Console.ReadLine();
-            }
+            }*/
             SystemState.updateThroughputTime(newThroughputTime);
             //Console.WriteLine(newThroughputTime);
             
