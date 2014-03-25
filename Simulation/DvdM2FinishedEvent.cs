@@ -56,9 +56,6 @@ namespace Simulation
                    
                     SystemState.machines2[machine2Index].timeDifferencesConveyor.Enqueue(
                         GeneralTime.MasterTime - SystemState.machines2[machine2Index].lastToConveyor);
-
-
-                    
                 }
 
                 SystemState.machines2[machine2Index].onConveyor.Enqueue(startTimeDvd);

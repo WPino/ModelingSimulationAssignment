@@ -33,18 +33,20 @@ namespace Simulation
 
         public override void HandleEvent()
         {
+
             //update the inkCounter, the total amount of dvds finished and the throughput times
             SystemState.machines4[machine4Index].inkCounter++;
             SystemState.totalDVDFinished++;
             double newThroughputTime = GeneralTime.MasterTime - startTimeDvd;
-
-            /*if (SystemState.totalDVDFinished % 1000 == 0)
+            /*if (newThroughputTime > 100000)
             {
-                Console.WriteLine("startTime {0} ending time {1}, \ndiff = {2}", startTimeDvd, GeneralTime.MasterTime, GeneralTime.MasterTime - startTimeDvd);
+                Console.WriteLine("Mastertime is {0}, starttime is {1} \nMachine {2}", GeneralTime.MasterTime, startTimeDvd, machine4Index);
                 Console.ReadLine();
             }*/
+            SystemState.updateThroughputTime(newThroughputTime);
 
-            //Console.WriteLine(newThroughputTime);
+            bool buffer0 = false;
+            bool checkM3blocked = false;
             
 
             //if there are still dvds in the buffer, schedule a new newink or M4finished event
@@ -65,12 +67,15 @@ namespace Simulation
             else
             {
                 SystemState.machines4[machine4Index].M4State = MachineState.State.idle;
+                buffer0 = true;
             }
+
+
             // check whether there is room in the buffer for a batch of machine 3
-            if (SystemState.machines3[machine4Index].bufferSize >= 
+            if (SystemState.machines3[machine4Index].bufferSize <=
                 (SystemState.machines4[machine4Index].bufferSize - SystemState.machines4[machine4Index].buffer.Count))
             {
-
+                checkM3blocked = true;
                 // check if machine 3 is blocked is if so unload batch DO FOR BOTH
                 // if it was idle before it cannot reboot now since that has nothing to do with space being available in the buffer after
                 if (SystemState.machines3[0].M3State == MachineState.State.blocked)
@@ -80,14 +85,30 @@ namespace Simulation
                     {
                         double transfer = SystemState.machines3[0].batch.Dequeue();
                         SystemState.machines4[machine4Index].buffer.Enqueue(transfer);
+                        
                     }
+                    if (SystemState.machines4[machine4Index].M4State == MachineState.State.idle)
+                    {
+                        if (SystemState.machines4[machine4Index].inkCounter == 200 + SystemState.machines4[machine4Index].deviation)
+                        {
+                            SystemState.machines4[machine4Index].ScheduleM4NewInk();
+                            SystemState.machines4[machine4Index].M4State = MachineState.State.broken;
+                        }
+                        else
+                        {
+                            double startTimefromQ = SystemState.machines4[machine4Index].buffer.Dequeue();
+                            SystemState.machines4[machine4Index].ScheduleDvdM4Finished(startTimefromQ);
+                            SystemState.machines4[machine4Index].M4State = MachineState.State.busy;
+                        }
+                    }
+
                     // if machine 3 is not busy it is now idle (since it is not blocked anymore either) 
                     // check if it can be rebooted
                     if (SystemState.machines3[0].M3State != MachineState.State.busy)
                     {
                         SystemState.machines3[0].M3State = MachineState.State.idle;
                         SystemState.machines3[0].checkRebootMachine3();
-                    }   
+                    }
                 }
                 else if (SystemState.machines3[1].M3State == MachineState.State.blocked)
                 {
@@ -97,6 +118,22 @@ namespace Simulation
                         double transfer = SystemState.machines3[1].batch.Dequeue();
                         SystemState.machines4[machine4Index].buffer.Enqueue(transfer);
                     }
+
+                    if (SystemState.machines4[machine4Index].M4State == MachineState.State.idle)
+                    {
+                        if (SystemState.machines4[machine4Index].inkCounter == 200 + SystemState.machines4[machine4Index].deviation)
+                        {
+                            SystemState.machines4[machine4Index].ScheduleM4NewInk();
+                            SystemState.machines4[machine4Index].M4State = MachineState.State.broken;
+                        }
+                        else
+                        {
+                            double startTimefromQ = SystemState.machines4[machine4Index].buffer.Dequeue();
+                            SystemState.machines4[machine4Index].ScheduleDvdM4Finished(startTimefromQ);
+                            SystemState.machines4[machine4Index].M4State = MachineState.State.busy;
+                        }
+                    }
+
                     if (SystemState.machines3[1].M3State != MachineState.State.busy)
                     {
                         SystemState.machines3[1].M3State = MachineState.State.idle;

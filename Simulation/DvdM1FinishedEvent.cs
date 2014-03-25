@@ -83,8 +83,8 @@ namespace Simulation
             }
 
             // if the machine 1 is neither blocked nor broken, schedule new event and set to busy
-            if (SystemState.machines1[prodLine].M1State != MachineState.State.blocked && 
-                SystemState.machines1[prodLine].M1State != MachineState.State.broken)
+            if (SystemState.machines1[machine1Index].M1State != MachineState.State.blocked && 
+                SystemState.machines1[machine1Index].M1State != MachineState.State.broken)
             {
                 SystemState.machines1[machine1Index].ScheduleDvdM1Finished(GeneralTime.MasterTime);
                 SystemState.machines1[machine1Index].M1State = MachineState.State.busy;

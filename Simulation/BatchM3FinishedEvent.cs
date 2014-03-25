@@ -65,13 +65,6 @@ namespace Simulation
             {
                 FirstSucceeded = true;
 
-/*<<<<<<< HEAD
-                Console.WriteLine("reading the machine3[{0}].batch", machine3Index);
-                SystemState.machines3[machine3Index].ReadQueue(SystemState.machines3[machine3Index].batch);
-                Console.ReadLine();
-
-=======*/
-
                 while(SystemState.machines3[machine3Index].batch.Count != 0)
                 {
                     double transfer = SystemState.machines3[machine3Index].batch.Dequeue();

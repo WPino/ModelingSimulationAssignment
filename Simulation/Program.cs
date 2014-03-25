@@ -80,7 +80,7 @@ namespace Simulation
         int buffersize3 = 20;
         int buffersize4 = 20;
 
-        double endTime = 100000;
+        double endTime = 10000000;
 
 
    
