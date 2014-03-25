@@ -45,8 +45,6 @@ namespace Simulation
             }*/
             SystemState.updateThroughputTime(newThroughputTime);
 
-            bool buffer0 = false;
-            bool checkM3blocked = false;
             
 
             //if there are still dvds in the buffer, schedule a new newink or M4finished event
@@ -67,7 +65,7 @@ namespace Simulation
             else
             {
                 SystemState.machines4[machine4Index].M4State = MachineState.State.idle;
-                buffer0 = true;
+                
             }
 
 
@@ -75,7 +73,7 @@ namespace Simulation
             if (SystemState.machines3[machine4Index].bufferSize <=
                 (SystemState.machines4[machine4Index].bufferSize - SystemState.machines4[machine4Index].buffer.Count))
             {
-                checkM3blocked = true;
+                
                 // check if machine 3 is blocked is if so unload batch DO FOR BOTH
                 // if it was idle before it cannot reboot now since that has nothing to do with space being available in the buffer after
                 if (SystemState.machines3[0].M3State == MachineState.State.blocked)
@@ -97,6 +95,7 @@ namespace Simulation
                         else
                         {
                             double startTimefromQ = SystemState.machines4[machine4Index].buffer.Dequeue();
+                            //CHANGE BACK, BLOCKS SYSTEM!!!!
                             SystemState.machines4[machine4Index].ScheduleDvdM4Finished(startTimefromQ);
                             SystemState.machines4[machine4Index].M4State = MachineState.State.busy;
                         }

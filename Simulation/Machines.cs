@@ -282,19 +282,22 @@ namespace Simulation
                 (SystemState.machines1[nr1machine1].M1State == MachineState.State.busy
                 && SystemState.machines1[nr2machine1].M1State == MachineState.State.busy)))
                 {
+                    if (!(SystemState.machines2[M2Index].buffer.Count == SystemState.machines2[M2Index].bufferSize))
+                    {
 
-                    // if a machine is neither broken or busy, set it to busy and schedule a new event
-                    if (SystemState.machines1[nr1machine1].M1State != MachineState.State.busy &&
-                        SystemState.machines1[nr1machine1].M1State != MachineState.State.broken)
-                    {
-                        SystemState.machines1[nr1machine1].ScheduleDvdM1Finished(GeneralTime.MasterTime);
-                        SystemState.machines1[nr1machine1].M1State = MachineState.State.busy;
-                    }
-                    if (SystemState.machines1[nr2machine1].M1State != MachineState.State.busy &&
-                        SystemState.machines1[nr2machine1].M1State != MachineState.State.broken)
-                    {
-                        SystemState.machines1[nr2machine1].ScheduleDvdM1Finished(GeneralTime.MasterTime);
-                        SystemState.machines1[nr2machine1].M1State = MachineState.State.busy;
+                        // if a machine is neither broken or busy, set it to busy and schedule a new event
+                        if (SystemState.machines1[nr1machine1].M1State != MachineState.State.busy &&
+                            SystemState.machines1[nr1machine1].M1State != MachineState.State.broken)
+                        {
+                            SystemState.machines1[nr1machine1].ScheduleDvdM1Finished(GeneralTime.MasterTime);
+                            SystemState.machines1[nr1machine1].M1State = MachineState.State.busy;
+                        }
+                        if (SystemState.machines1[nr2machine1].M1State != MachineState.State.busy &&
+                            SystemState.machines1[nr2machine1].M1State != MachineState.State.broken)
+                        {
+                            SystemState.machines1[nr2machine1].ScheduleDvdM1Finished(GeneralTime.MasterTime);
+                            SystemState.machines1[nr2machine1].M1State = MachineState.State.busy;
+                        }
                     }
                     
                 }
@@ -411,7 +414,7 @@ namespace Simulation
                     }
                     
                     SystemState.machines3[M3Index].ScheduleBatchM3Finished();
-                    SystemState.machines3[0].buffer.Clear();
+                    //SystemState.machines3[0].buffer.Clear();
                     SystemState.machines3[M3Index].M3State = MachineState.State.busy;
                     //if the conveyor is not empty schedule new to buffer 3 event
                     if (SystemState.machines2[0].onConveyor.Count != 0)
@@ -419,9 +422,10 @@ namespace Simulation
                         SystemState.machines3[0].ScheduleDvdToBuffer3(false);
                     }
                     //if M2 was blocked and the buffer before machine 2 was not empty -> schedule new M2 finished event
-                    if (SystemState.machines2[0].M2State == MachineState.State.blocked)
+                    if (SystemState.machines2[0].M2State == MachineState.State.broken)
                     {
-                        if (SystemState.machines2[0].buffer.Count != 0)
+                        if (SystemState.machines2[0].buffer.Count != 0 )//&&
+                            //SystemState.machines3[0].buffer.Count < SystemState.machines3[0].bufferSize)
                         {
                             double startTimeDvdfromQ = SystemState.machines2[0].buffer.Dequeue();
                             SystemState.machines2[0].ScheduleDvdM2Finished(startTimeDvdfromQ);
@@ -453,9 +457,10 @@ namespace Simulation
                         SystemState.machines3[1].ScheduleDvdToBuffer3(false);
                     }
                     //if M2 was blocked and the buffer before machine 2 was not empty -> schedule new M2 finished event
-                    if (SystemState.machines2[1].M2State == MachineState.State.blocked)
+                    if (SystemState.machines2[1].M2State == MachineState.State.broken)
                     {
-                        if (SystemState.machines2[1].buffer.Count != 0)
+                        if (SystemState.machines2[1].buffer.Count != 0 )//&&
+                            //SystemState.machines3[1].buffer.Count < SystemState.machines3[1].bufferSize)
                         {
                             double startTimeDvdfromQ = SystemState.machines2[1].buffer.Dequeue();
                             SystemState.machines2[1].ScheduleDvdM2Finished(startTimeDvdfromQ);

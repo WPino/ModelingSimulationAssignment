@@ -55,9 +55,6 @@ namespace Simulation
 
             //the delay is counted twice, but this is trivial
 
-            //Console.WriteLine("SystemState.machines3[{0}].buffer.Count = {1}", machine3Index, SystemState.machines3[machine3Index].buffer.Count);
-            //Console.ReadLine();
-
             if (SystemState.machines3[machine3Index].buffer.Count == SystemState.machines3[machine3Index].bufferSize)
             {
                 SystemState.machines2[machine3Index].M2State = MachineState.State.blocked;
@@ -87,13 +84,14 @@ namespace Simulation
                         }
 
                         SystemState.machines3[0].ScheduleBatchM3Finished();
-                        SystemState.machines3[machine3Index].buffer.Clear();
+                        //SystemState.machines3[machine3Index].buffer.Clear();
                         SystemState.machines3[0].M3State = MachineState.State.busy;
 
 
 
                         //if M2 was blocked and the buffer before machine 2 was not empty -> schedule new M2 finished event
                         if (SystemState.machines2[machine3Index].M2State == MachineState.State.blocked &&
+                            //SystemState.machines3[machine3Index].buffer.Count < SystemState.machines3[machine3Index].bufferSize &&
                             SystemState.machines2[machine3Index].buffer.Count != 0)
                         {
                             double startTimeDvdfromQ = SystemState.machines2[machine3Index].buffer.Dequeue();
@@ -103,7 +101,6 @@ namespace Simulation
                             SystemState.machines2[machine3Index].checkRebootMachines1();
                         }
                     }
-
                     else if (SystemState.machines3[1].M3State != MachineState.State.blocked &&
                             SystemState.machines3[1].M3State != MachineState.State.busy)
                     {
@@ -121,6 +118,7 @@ namespace Simulation
 
                         //if M2 was blocked and the buffer before machine 2 was not empty -> schedule new M2 finished event
                         if (SystemState.machines2[machine3Index].M2State == MachineState.State.blocked &&
+                            //SystemState.machines3[machine3Index].buffer.Count < SystemState.machines3[machine3Index].bufferSize &&
                             SystemState.machines2[machine3Index].buffer.Count != 0)
                         {
                             double startTimeDvdfromQ = SystemState.machines2[machine3Index].buffer.Dequeue();

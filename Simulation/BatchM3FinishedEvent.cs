@@ -9,7 +9,7 @@ namespace Simulation
     {
         private int machine3Index;
         private string eventType = "BatchM3FinishedEvent";
-        Queue<double> startTimesDvds;
+        //Queue<double> startTimesDvds;
         
         public BatchM3FinishedEvent(int index)
         {

@@ -42,7 +42,7 @@ namespace Simulation
 
         public override void HandleEvent()
         {            
-            SystemState.machines2[machine2Index].M2State = MachineState.State.idle;
+            //SystemState.machines2[machine2Index].M2State = MachineState.State.idle;
             if (!DvdFails())
             {
              
@@ -59,6 +59,8 @@ namespace Simulation
                 }
 
                 SystemState.machines2[machine2Index].onConveyor.Enqueue(startTimeDvd);
+                
+                //Console.WriteLine(SystemState.machines2[machine2Index].onConveyor.Count);
                
                 SystemState.machines2[machine2Index].lastToConveyor = GeneralTime.MasterTime;
               
@@ -72,8 +74,9 @@ namespace Simulation
             }
 
             //If the buffer before machine 2 is not empty, and machine two is not blocked schedule a new event 
-            if (SystemState.machines2[machine2Index].buffer.Count != 0 && 
-                SystemState.machines2[machine2Index].M2State != MachineState.State.blocked)
+            if (SystemState.machines2[machine2Index].buffer.Count != 0 &&
+                SystemState.machines2[machine2Index].M2State != MachineState.State.blocked/* && 
+                SystemState.machines3[machine2Index].buffer.Count < SystemState.machines3[machine2Index].bufferSize*/)
             {
               
                 double startTimeDvdfromQ = SystemState.machines2[machine2Index].buffer.Dequeue();
