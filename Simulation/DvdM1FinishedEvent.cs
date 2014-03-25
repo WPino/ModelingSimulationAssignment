@@ -70,10 +70,10 @@ namespace Simulation
             }
             else
             {
-                SystemState.machines2[prodLine].buffer.Enqueue(startTimeDvd);
+                SystemState.machines2[prodLine].addToBuffer(startTimeDvd);
             }
             // if the buffer is full (or has one spot left which the other machine will fill) set to blocked (but don't if the machine is broken)
-            if (SystemState.machines1[machine1Index].M1State != MachineState.State.blocked &&
+            if (/*SystemState.machines1[machine1Index].M1State != MachineState.State.blocked &&*/
                 (SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize ||
                 ((SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize - 1) &&
                 (SystemState.machines1[otherMachine].M1State == MachineState.State.busy))) &&

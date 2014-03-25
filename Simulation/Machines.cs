@@ -51,10 +51,14 @@ namespace Simulation
 
         public int bufferSize { get; set; }
 
-        /*public void setBufferSize(int size)
+        public void addToBuffer(double startTimeDvd)
         {
-            buffer = new double[size];
-        }*/
+            this.buffer.Enqueue(startTimeDvd);
+            if (buffer.Count > bufferSize)
+            {
+                throw new Exception("buffer overflow");
+            }
+        }
 
         // to be overriden since not all machines hold the same info
         public virtual void MachineDetails()
@@ -278,6 +282,7 @@ namespace Simulation
                 (SystemState.machines1[nr1machine1].M1State == MachineState.State.busy
                 && SystemState.machines1[nr2machine1].M1State == MachineState.State.busy)))
                 {
+
                     // if a machine is neither broken or busy, set it to busy and schedule a new event
                     if (SystemState.machines1[nr1machine1].M1State != MachineState.State.busy &&
                         SystemState.machines1[nr1machine1].M1State != MachineState.State.broken)
@@ -291,6 +296,7 @@ namespace Simulation
                         SystemState.machines1[nr2machine1].ScheduleDvdM1Finished(GeneralTime.MasterTime);
                         SystemState.machines1[nr2machine1].M1State = MachineState.State.busy;
                     }
+                    
                 }
             }
         }
@@ -349,6 +355,7 @@ namespace Simulation
                 }
             }
         }
+
         public int M3Index
         {
             get { return index; }

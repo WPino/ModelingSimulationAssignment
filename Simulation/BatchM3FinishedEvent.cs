@@ -68,7 +68,7 @@ namespace Simulation
                 while(SystemState.machines3[machine3Index].batch.Count != 0)
                 {
                     double transfer = SystemState.machines3[machine3Index].batch.Dequeue();
-                    SystemState.machines4[0].buffer.Enqueue(transfer);
+                    SystemState.machines4[0].addToBuffer(transfer);
                 }
                 if (SystemState.machines4[0].M4State == MachineState.State.idle)
                 {
@@ -101,7 +101,7 @@ namespace Simulation
                     while (SystemState.machines3[machine3Index].batch.Count != 0)
                     {
                         double transfer = SystemState.machines3[machine3Index].batch.Dequeue();
-                        SystemState.machines4[1].buffer.Enqueue(transfer);
+                        SystemState.machines4[1].addToBuffer(transfer);
                     }
                     if (SystemState.machines4[1].M4State == MachineState.State.idle)
                     {

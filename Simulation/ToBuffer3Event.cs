@@ -67,7 +67,7 @@ namespace Simulation
                 SystemState.machines2[machine3Index].timeDifferencesConveyor.Dequeue();
                 //get the starttime of the new dvd
                 double startTimeDvd = SystemState.machines2[machine3Index].onConveyor.Dequeue();
-                SystemState.machines3[machine3Index].buffer.Enqueue(startTimeDvd);
+                SystemState.machines3[machine3Index].addToBuffer(startTimeDvd);
 
 
              
