@@ -167,7 +167,7 @@ namespace Simulation
                     }
                 }
             }
-            // make sure in the function call to check if the value is not -1;
+            // make sure in the function call to check if the value is not -1, done
             return -1;
         }
         

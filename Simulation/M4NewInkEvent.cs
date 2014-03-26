@@ -18,19 +18,14 @@ namespace Simulation
             // method calculating the time when the event will occur
             this.Time = CalculateEventTime();
 
-            // adding event to the linkedlist
-           
+            // adds event to the linkedlist
             Program.AddNextNode(EventList.eventList, this);
-            
         }
 
         public override double CalculateEventTime()
         {
-            // this is not the correct time
             double time = GeneralTime.MasterTime + randomNormDist(15*60, 1*60);
             return time;
-
-
         }
 
         public override void HandleEvent()

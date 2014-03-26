@@ -17,76 +17,51 @@ namespace Simulation
             machine2Index = index;
             startTimeDvd = starttime;
 
-
-
             // method calculating the time when the event will occur
             this.Time = CalculateEventTime();
 
-            // adding event to the linkedlist
-          
+            // adds event to the linkedlist
             Program.AddNextNode(EventList.eventList, this);
         }
 
         public override double CalculateEventTime()
         {
-            // same bs as in DvdM1finished
-            
-            Random rand = new Random();
+            // using the gamma distribution.
+            double gamma = GammaDistribution(1.92185748, 1 / 0.07857608);
+            if (gamma == -1)
+                throw new Exception("Gamma Distribution Malfunction");
 
-            // using the gamma distribution. The shape and scale are found by fitting the model. 
-            // I did that using R, ill include it in the report.
-            double finished = GeneralTime.MasterTime + GammaDistribution(1.92185748, 1 / 0.07857608);
-            
+            double finished = GeneralTime.MasterTime + gamma;
             return finished;
         }
 
         public override void HandleEvent()
         {            
-            //SystemState.machines2[machine2Index].M2State = MachineState.State.idle;
+            //set machine to idle
+            SystemState.machines2[machine2Index].M2State = MachineState.State.idle;
+
+            // if the dvd does not fail, update the content of the conveyor and the buffer combined and schedule a new DvdToBuffer3 event
             if (!DvdFails())
-            {
-             
-                if (SystemState.machines2[machine2Index].onConveyor.Count == 0)
-                {
-                    SystemState.machines3[machine2Index].ScheduleDvdToBuffer3(true);
-                    SystemState.machines2[machine2Index].timeDifferencesConveyor.Enqueue(0);
-                }
-                else
-                {
-                   
-                    SystemState.machines2[machine2Index].timeDifferencesConveyor.Enqueue(
-                        GeneralTime.MasterTime - SystemState.machines2[machine2Index].lastToConveyor);
-                }
-
-                SystemState.machines2[machine2Index].onConveyor.Enqueue(startTimeDvd);
-                
-                //Console.WriteLine(SystemState.machines2[machine2Index].onConveyor.Count);
-               
-                SystemState.machines2[machine2Index].lastToConveyor = GeneralTime.MasterTime;
-              
+            {  
+                SystemState.machines2[machine2Index].buffer3InclConveyorContent++;
+                SystemState.machines3[machine2Index].ScheduleDvdToBuffer3(startTimeDvd);              
             }
 
-
-            if (SystemState.machines2[machine2Index].buffer.Count == 0 &&
-                    SystemState.machines2[machine2Index].M2State != MachineState.State.blocked)
+            // if the content of the conveyor and the buffer combined is equal to the buffer size set machine to blocked
+            // this is inefficient and inaccurate
+            if (SystemState.machines2[machine2Index].buffer3InclConveyorContent == SystemState.machines3[machine2Index].bufferSize)
             {
-                SystemState.machines2[machine2Index].M2State = MachineState.State.idle;
+                SystemState.machines2[machine2Index].M2State = MachineState.State.blocked;
             }
-
-            //If the buffer before machine 2 is not empty, and machine two is not blocked schedule a new event 
-            if (SystemState.machines2[machine2Index].buffer.Count != 0 &&
-                SystemState.machines2[machine2Index].M2State != MachineState.State.blocked/* && 
-                SystemState.machines3[machine2Index].buffer.Count < SystemState.machines3[machine2Index].bufferSize*/)
+            else if (SystemState.machines2[machine2Index].buffer.Count != 0)
             {
-              
+                //if there is still space, schedule a new dvdM2event from the buffer (if it isnt empty)
                 double startTimeDvdfromQ = SystemState.machines2[machine2Index].buffer.Dequeue();
                 SystemState.machines2[machine2Index].ScheduleDvdM2Finished(startTimeDvdfromQ);
                 SystemState.machines2[machine2Index].M2State = MachineState.State.busy;
 
                 SystemState.machines2[machine2Index].checkRebootMachines1();
-
             }
-
         }
 
         private bool DvdFails()

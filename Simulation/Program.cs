@@ -80,7 +80,7 @@ namespace Simulation
         int buffersize3 = 20;
         int buffersize4 = 20;
 
-        double endTime = 10000000;
+        double endTime = 1000000;
 
 
    
@@ -139,11 +139,8 @@ namespace Simulation
                 
                 GeneralTime.MasterTime = EventList.eventList.First.Value.Time;
                 Event nextEvent = Program.RemoveFirstNode(EventList.eventList);
-                nextEvent.HandleEvent();
-
-                
+                nextEvent.HandleEvent();  
             }
-
         }
 
         public void InitialiseMachines()

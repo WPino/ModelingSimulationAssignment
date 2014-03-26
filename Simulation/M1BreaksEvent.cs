@@ -15,8 +15,8 @@ namespace Simulation
         public M1BreaksEvent(int index)
         {
             machine1Index = index;
+
             this.Time = CalculateEventTime();
-            //EventList.eventList.Add(this);
             Program.AddNextNode(EventList.eventList, this);
         }
 
@@ -24,7 +24,6 @@ namespace Simulation
         {
             return GeneralTime.MasterTime + randomExpDist(8*3600);
         }
-
 
         public override void HandleEvent()
         {

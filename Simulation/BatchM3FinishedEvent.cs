@@ -18,8 +18,7 @@ namespace Simulation
             // method calculating the time when the event will occur
             this.Time = CalculateEventTime();
 
-            // adding event to the linkedlist
-            //EventList.eventList.Add(this);
+            // adds event to the linkedlist
             Program.AddNextNode(EventList.eventList, this);
 
         }
@@ -52,7 +51,7 @@ namespace Simulation
 
         public override void HandleEvent()
         {
-            //following hsa to happen for both machines 4
+            //following has to happen for both machines 4, but only if the first fails, hence the bool
             bool FirstSucceeded = false;
 
             //if the buffer has no space for the batch, set machine to blocked
@@ -65,11 +64,14 @@ namespace Simulation
             {
                 FirstSucceeded = true;
 
+                //place contents of batch in buffer 4
                 while(SystemState.machines3[machine3Index].batch.Count != 0)
                 {
                     double transfer = SystemState.machines3[machine3Index].batch.Dequeue();
                     SystemState.machines4[0].addToBuffer(transfer);
                 }
+
+                // if M4 was idle, check if ink needs to be changed, else schedule M4finished event
                 if (SystemState.machines4[0].M4State == MachineState.State.idle)
                 {
                     if (SystemState.machines4[0].inkCounter == 200 + SystemState.machines4[0].deviation)
@@ -85,6 +87,7 @@ namespace Simulation
 
                     }
                 }
+                //the machine is now idle, check if it can be rebooted
                 SystemState.machines3[machine3Index].M3State = MachineState.State.idle;
                 SystemState.machines3[machine3Index].checkRebootMachine3();
             }

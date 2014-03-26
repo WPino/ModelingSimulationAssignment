@@ -46,7 +46,6 @@
     <Compile Include="DvdM2FinishedEvent.cs" />
     <Compile Include="DvdM4Finished.cs" />
     <Compile Include="Event.cs" />
-    <Compile Include="LinkedList.cs" />
     <Compile Include="M1BreaksEvent.cs" />
     <Compile Include="M1RepairedEvent.cs" />
     <Compile Include="M4NewInkEvent.cs" />

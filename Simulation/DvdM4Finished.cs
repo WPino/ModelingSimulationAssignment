@@ -19,33 +19,23 @@ namespace Simulation
             // method calculating the time when the event will occur
             this.Time = CalculateEventTime();
 
-            // adding event to the linkedlist
+            // adds event to the linkedlist
             Program.AddNextNode(EventList.eventList, this);
-
         }
 
         public override double CalculateEventTime()
         {
-            //again completely arbitrary
-            
+            //HAS TO BE IMPLEMENTED
             return GeneralTime.MasterTime + 25; 
         }
 
         public override void HandleEvent()
         {
-
-            //update the inkCounter, the total amount of dvds finished and the throughput times
+            //update the inkCounter, the total amount of dvds finished and the average throughput time
             SystemState.machines4[machine4Index].inkCounter++;
             SystemState.totalDVDFinished++;
             double newThroughputTime = GeneralTime.MasterTime - startTimeDvd;
-            /*if (newThroughputTime > 100000)
-            {
-                Console.WriteLine("Mastertime is {0}, starttime is {1} \nMachine {2}", GeneralTime.MasterTime, startTimeDvd, machine4Index);
-                Console.ReadLine();
-            }*/
             SystemState.updateThroughputTime(newThroughputTime);
-
-            
 
             //if there are still dvds in the buffer, schedule a new newink or M4finished event
             if (SystemState.machines4[machine4Index].buffer.Count != 0)
@@ -65,15 +55,12 @@ namespace Simulation
             else
             {
                 SystemState.machines4[machine4Index].M4State = MachineState.State.idle;
-                
             }
-
 
             // check whether there is room in the buffer for a batch of machine 3
             if (SystemState.machines3[machine4Index].bufferSize <=
                 (SystemState.machines4[machine4Index].bufferSize - SystemState.machines4[machine4Index].buffer.Count))
             {
-                
                 // check if machine 3 is blocked is if so unload batch DO FOR BOTH
                 // if it was idle before it cannot reboot now since that has nothing to do with space being available in the buffer after
                 if (SystemState.machines3[0].M3State == MachineState.State.blocked)
@@ -95,7 +82,6 @@ namespace Simulation
                         else
                         {
                             double startTimefromQ = SystemState.machines4[machine4Index].buffer.Dequeue();
-                            //CHANGE BACK, BLOCKS SYSTEM!!!!
                             SystemState.machines4[machine4Index].ScheduleDvdM4Finished(startTimefromQ);
                             SystemState.machines4[machine4Index].M4State = MachineState.State.busy;
                         }

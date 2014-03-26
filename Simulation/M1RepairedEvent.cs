@@ -34,18 +34,6 @@ namespace Simulation
             this.Time = CalculateEventTime();
 
             Program.AddNextNode(EventList.eventList, this);
-
-            // method to find time at which this event happens
-            // and add to EventList.eventList
-        }
-
-        public override void PrintDetails()
-        {
-            string myState;
-            myState = String.Format("Type of event: {0}\nMachine1 index: {1}\nTime: {2}",
-                eventType, machine1Index, this.Time);
-            Console.WriteLine(myState);
-            Console.WriteLine();
         }
 
         public override double CalculateEventTime()
@@ -90,6 +78,15 @@ namespace Simulation
                 SystemState.machines1[machine1Index].ScheduleDvdM1Finished(GeneralTime.MasterTime);
                 SystemState.machines1[machine1Index].M1State = MachineState.State.busy;
             }
+        }
+
+        public override void PrintDetails()
+        {
+            string myState;
+            myState = String.Format("Type of event: {0}\nMachine1 index: {1}\nTime: {2}",
+                eventType, machine1Index, this.Time);
+            Console.WriteLine(myState);
+            Console.WriteLine();
         }
     }
 }

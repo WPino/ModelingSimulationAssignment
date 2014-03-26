@@ -10,7 +10,6 @@ namespace Simulation
         private int machine1Index;
         private string eventType = "DvdM1FinishedEvent";
         double startTimeDvd;
-        //Random rand = new Random(10);
 
 
         public DvdM1FinishedEvent(int index, double starttime)
@@ -18,15 +17,11 @@ namespace Simulation
             machine1Index = index;
             startTimeDvd = starttime;
             
-
-            
             // method calculating the time when the event will occur
             this.Time = CalculateEventTime();
             
-            // adding event to the linkedlist
-            //EventList.eventList.Add(this);
+            // adds event to the linkedlist
             Program.AddNextNode(EventList.eventList, this);
-
 	    }
 
 
@@ -34,14 +29,13 @@ namespace Simulation
         // calculate when new Event of type DvdFinishedEvent will happen
         public override double CalculateEventTime()
         {
-            // read from processing times (exponential distribution) argue why 60 is right
             return GeneralTime.MasterTime + randomExpDist(59.93954);
         }
 
 
         public override void HandleEvent()
         {
-            
+            //SystemState.machines1[machine1Index].M1State = MachineState.State.idle;
             // Checks which production line the machine is in (which machine two has to be checked)
             // and what the other machine in that production line is
             int prodLine, otherMachine;
@@ -67,17 +61,17 @@ namespace Simulation
             {
                 SystemState.machines2[prodLine].ScheduleDvdM2Finished(startTimeDvd);
                 SystemState.machines2[prodLine].M2State = MachineState.State.busy;
+                
             }
             else if(SystemState.machines2[prodLine].buffer.Count + 1 <= SystemState.machines2[prodLine].bufferSize)
             {
-
+                //only do this if there is space in the buffer 
+                //(otherwise discard, this is not accurate but will not have a big influence on system)
                 SystemState.machines2[prodLine].addToBuffer(startTimeDvd);
             }
 
-
             // if the buffer is full (or has one spot left which the other machine will fill) set to blocked (but don't if the machine is broken)
-            if (/*SystemState.machines1[machine1Index].M1State != MachineState.State.blocked &&*/
-                (SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize ||
+            if ((SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize ||
                 ((SystemState.machines2[prodLine].buffer.Count == SystemState.machines2[prodLine].bufferSize - 1) &&
                 (SystemState.machines1[otherMachine].M1State == MachineState.State.busy))) &&
                 SystemState.machines1[machine1Index].M1State != MachineState.State.broken)
