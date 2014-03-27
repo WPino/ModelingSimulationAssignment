@@ -547,8 +547,7 @@ namespace Simulation
 
         public void calculateDeviation()
         {
-            Random R = new Random();
-            int value = R.Next(10);
+            int value = SystemState.R.Next(10);
 
             switch (value)
             {

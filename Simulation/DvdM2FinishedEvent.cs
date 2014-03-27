@@ -66,8 +66,7 @@ namespace Simulation
 
         private bool DvdFails()
         {
-            Random R = new Random();
-            int i = R.Next(100);
+            int i = SystemState.R.Next(100);
             if (i < 2)
                 return true;
             else

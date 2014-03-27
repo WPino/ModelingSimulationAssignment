@@ -41,8 +41,7 @@ namespace Simulation
 
         private int DvdStalls()
         {
-            Random R = new Random();
-            int i = R.Next(100);
+            int i = SystemState.R.Next(100);
             if (i < 3)
                 return 1;
             else
