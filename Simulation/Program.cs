@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Diagnostics;
 
 /* Using the C# linked list. Do not use the LinkedList class anymore. The linkedlist is still defined in the 
     public static class. The new method: AddNextNode, RemoveFirst and Display are static method defined in the 
@@ -75,74 +76,138 @@ namespace Simulation
 
         //static StreamWriter write = new StreamWriter(@"C:\Users\Raphael\Documents\_Master\Period_3\Simulations\simulationAssignment\analysis\prodEveryHour_200Buffers.txt");
 
-        int buffersize2 = 200;
-        int buffersize3 = 200;
-        int buffersize4 = 200;
+        int[] buffersize2 = { 20, 40/*, 70, 100, 150, 200 */};
+        int[] buffersize3 = { 20, 40/*, 70, 100, 150, 200 */};
+        int[] buffersize4 = { 20, 40/*, 70, 100, 150, 200 */};
 
         double endTime = 200 * 3600;
         double prevEndTime = 0;
-        
-   
-        static void Main(string[] args)
+
+        //double[,] finalData = new double[216, 5];
+
+        public void LoopRun()
         {
-            for (int k = 0; k < 10; k++)
+            for (int b2 = 0; b2 < buffersize2.Length; b2++)
             {
-                Program p = new Program();
-                GeneralTime.MasterTime = 0;
-                p.InitialiseMachines();
-                p.ScheduleEvents();
-
-
-                p.Run();
-
-
-
-                // set all states to idle to check if you get 100%
-                // without it, we do not have a final state change, which does not allow use to update the time of the previous state.
-                for (int i = 0; i < 4; i++)
+                for (int b3 = 0; b3 < buffersize3.Length; b3++)
                 {
-                    SystemState.machines1[i].M1State = MachineState.State.idle;
-                    if (i < 2)
+                    for (int b4 = 0; b4 < buffersize3.Length; b4++)
                     {
-                        SystemState.machines2[i].M2State = MachineState.State.idle;
-                        SystemState.machines3[i].M3State = MachineState.State.idle;
-                        SystemState.machines4[i].M4State = MachineState.State.idle;
+                        for (int k = 0; k < 10; k++)
+                        {
+
+                            SystemState.R = new Random(k);
+                            GeneralTime.MasterTime = 0;
+                            InitialiseMachines(b2, b3, b4);
+                            ScheduleEvents();
+                            Run();
+
+                            // set all states to idle to check if you get 100%
+                            // without it, we do not have a final state change, which does not allow use to update the time of the previous state.
+                            for (int i = 0; i < 4; i++)
+                            {
+                                SystemState.machines1[i].M1State = MachineState.State.idle;
+                                if (i < 2)
+                                {
+                                    SystemState.machines2[i].M2State = MachineState.State.idle;
+                                    SystemState.machines3[i].M3State = MachineState.State.idle;
+                                    SystemState.machines4[i].M4State = MachineState.State.idle;
+                                }
+                            }
+
+
+                            //Analyze(b2, b3, b4);
+
+                            //IdleBusyBrokenBlockedTimes();
+
+                            //Console.WriteLine(SystemState.totalDVDFinished);
+
+
+                            Reset.ResetNew();
+                            //Console.ReadLine();
+                        }
                     }
                 }
-
-
-                //p.Analyze();
-
-                //p.IdleBusyBrokenBlockedTimes();
-
-                //Console.WriteLine(SystemState.totalDVDFinished);
-
-                
-                Reset.ResetNew(k + 1); 
-               
             }
+        }
 
-            //write.Close();
-            Console.WriteLine("DONE");
+
+        static void Main(string[] args)
+        {
+            Stopwatch sp = new Stopwatch();
+            sp.Start();
+
+            Program p = new Program();
+            p.LoopRun();
+
+            sp.Stop();
+
+
+            Console.WriteLine("DONE in {0}", sp.Elapsed);
 
             Console.ReadLine();
         }
 
+            //for (int b2 = 0; b2 < buffersize2.Length ; b2++)
+            //{
+            //    for (int b3 = 0; b3 < buffersize3.Length; b3++)
+            //    {
+            //        for (int b4 = 0; b4 < buffersize3.Length; b4++)
+            //        {
+            //            for (int k = 0; k < 10; k++)
+            //            {
+            //                Program p = new Program();
+            //                GeneralTime.MasterTime = 0;
+            //                p.InitialiseMachines();
+            //                p.ScheduleEvents();
+
+
+            //                p.Run();
+
+
+
+            //                // set all states to idle to check if you get 100%
+            //                // without it, we do not have a final state change, which does not allow use to update the time of the previous state.
+            //                for (int i = 0; i < 4; i++)
+            //                {
+            //                    SystemState.machines1[i].M1State = MachineState.State.idle;
+            //                    if (i < 2)
+            //                    {
+            //                        SystemState.machines2[i].M2State = MachineState.State.idle;
+            //                        SystemState.machines3[i].M3State = MachineState.State.idle;
+            //                        SystemState.machines4[i].M4State = MachineState.State.idle;
+            //                    }
+            //                }
+
+
+            //                //p.Analyze();
+
+            //                //p.IdleBusyBrokenBlockedTimes();
+
+            //                //Console.WriteLine(SystemState.totalDVDFinished);
+
+
+            //                Reset.ResetNew(k + 1);
+
+            //            }
+            //        }
+            //    }
+
+
+            
+
+            //write.Close();
+
         public void Run()
         {
-            int hours = 0;
-            double prevAmount = 0;
-            double  produced = 0;
-
+            
+            bool passed = false;
             while (EventList.eventList.First.Value.Time < endTime)
 	        {
-                if (GeneralTime.MasterTime > hours * 3600)
+                if(endTime > (60 * 3600) && passed == false)
                 {
-                    produced = SystemState.totalDVDFinished - prevAmount;
-                    prevAmount += produced;
-                    //write.Write(produced + " ");
-                    //Console.WriteLine("hour {0}.  produced {1}", hours + 1, produced);
-                    hours++;
+                    passed = true;
+                    //Reset.ResetPerformances(); // to implement
                 }
 
                 GeneralTime.MasterTime = EventList.eventList.First.Value.Time;
@@ -152,7 +217,7 @@ namespace Simulation
             
         }
 
-        public void InitialiseMachines()
+        public void InitialiseMachines(int indexb2, int indexb3, int indexb4)
         {
             SystemState.machines1 = new Machine1[4];
             SystemState.machines2 = new Machine2[2];
@@ -177,9 +242,9 @@ namespace Simulation
                 SystemState.machines3[i].M3State = MachineState.State.idle;
                 SystemState.machines4[i].M4State = MachineState.State.idle;
 
-                SystemState.machines2[i].bufferSize = this.buffersize2;
-                SystemState.machines3[i].bufferSize = this.buffersize3;
-                SystemState.machines4[i].bufferSize = this.buffersize4;
+                SystemState.machines2[i].bufferSize = this.buffersize2[indexb2];
+                SystemState.machines3[i].bufferSize = this.buffersize3[indexb3];
+                SystemState.machines4[i].bufferSize = this.buffersize4[indexb4];
             }
         }
 
@@ -193,7 +258,7 @@ namespace Simulation
             }
         }
 
-        public void Analyze()
+        public void Analyze(int b2, int b3, int b4)
         {
             Console.WriteLine(" ========= REPORT ========= ");
 
@@ -202,7 +267,7 @@ namespace Simulation
             Console.WriteLine("Total of {0} DVDs produced.", SystemState.totalDVDFinished);
 
             Console.WriteLine("Buffer two = {0}\nBuffer three = {1}\nBuffer four = {2}",
-                this.buffersize2, this.buffersize3, this.buffersize4);
+                this.buffersize2[b2], this.buffersize3[b3], this.buffersize4[b4]);
             Console.WriteLine();
 
             double avgBusyTimeM1 = 0;
