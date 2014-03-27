@@ -26,7 +26,7 @@ namespace Simulation
         public override double CalculateEventTime()
         {
             //HAS TO BE IMPLEMENTED
-            return GeneralTime.MasterTime + 25; 
+            return GeneralTime.MasterTime + UniformDistribution(20, 30); 
         }
 
         public override void HandleEvent()

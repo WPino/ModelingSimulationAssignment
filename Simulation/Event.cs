@@ -171,5 +171,10 @@ namespace Simulation
             return -1;
         }
         
+        public double UniformDistribution(double a, double b)
+        {
+            double rand = SystemState.R.NextDouble();
+            return a + (b - a) * rand;
+        }
     }
 }
