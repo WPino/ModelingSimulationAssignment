@@ -8,10 +8,10 @@ namespace Simulation
 {
     static class Reset
     {
-        public static void ResetNew(int seed)
+        public static void ResetNew()
         {   // time
             GeneralTime.MasterTime = 0;
-            SystemState.R = new Random(seed);
+            //SystemState.R = new Random(seed);
             SystemState.totalDVDFinished = 0;
             SystemState.averageThroughputTime = 0;
 

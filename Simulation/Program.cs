@@ -75,18 +75,21 @@ namespace Simulation
 
         //static StreamWriter write = new StreamWriter(@"C:\Users\Raphael\Documents\_Master\Period_3\Simulations\simulationAssignment\analysis\prodEveryHour_200Buffers.txt");
 
-        int buffersize2 = 200;
-        int buffersize3 = 200;
-        int buffersize4 = 200;
+        int buffersize2 = 20;
+        int buffersize3 = 20;
+        int buffersize4 = 20;
 
         double endTime = 200 * 3600;
         double prevEndTime = 0;
+
+        
         
    
         static void Main(string[] args)
         {
-            for (int k = 0; k < 10; k++)
+            for (int k = 0; k < 2; k++)
             {
+                SystemState.R = new Random(k);
                 Program p = new Program();
                 GeneralTime.MasterTime = 0;
                 p.InitialiseMachines();
@@ -118,7 +121,7 @@ namespace Simulation
                 //Console.WriteLine(SystemState.totalDVDFinished);
 
                 
-                Reset.ResetNew(k + 1); 
+                Reset.ResetNew(); 
                
             }
 
