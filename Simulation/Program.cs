@@ -81,17 +81,30 @@ namespace Simulation
         double endTime = 200 * 3600;
         double prevEndTime = 0;
 
-        //double[,] finalData = new double[216, 5];
+        // three dimensional arrays, one for each performance measure.
+
+        
+        
 
         public void LoopRun()
         {
+
+            double[, ,] throuputs = new double[buffersize2.Length, buffersize3.Length, buffersize4.Length];
+            double[, ,] prodPerHour = new double[buffersize2.Length, buffersize3.Length, buffersize4.Length];
+
+            int repetition = 2;
             for (int b2 = 0; b2 < buffersize2.Length; b2++)
             {
                 for (int b3 = 0; b3 < buffersize3.Length; b3++)
                 {
                     for (int b4 = 0; b4 < buffersize3.Length; b4++)
                     {
-                        for (int k = 0; k < 2; k++)
+                        double averageThr = 0;
+                        double produtionPerHour = 0;
+                        double totalProdH = 0;
+
+
+                        for (int k = 0; k < repetition; k++)
                         {
 
                             if (buffersize3[b3] > buffersize4[b4])
@@ -105,9 +118,7 @@ namespace Simulation
                             ScheduleEvents();
                             Run();
 
-                            // set all states to idle to check if you get 100%
-                            // without it, we do not have a final state change, which does not allow use to update the time of the previous state.
-                            for (int i = 0; i < 4; i++)
+                           for (int i = 0; i < 4; i++)
                             {
                                 SystemState.machines1[i].M1State = MachineState.State.idle;
                                 if (i < 2)
@@ -119,14 +130,41 @@ namespace Simulation
                             }
 
 
-                            Analyze(b2, b3, b4);
+                            averageThr += SystemState.averageThroughputTime;
+                            if (GeneralTime.MasterTime != 0)
+                            {
+                                produtionPerHour = SystemState.totalDVDFinished / ((GeneralTime.MasterTime - SystemState.timeResetPerformance) / 3600);
+                            }
+
+                            totalProdH += produtionPerHour;
+                            //Analyze(b2, b3, b4);
 
                             //IdleBusyBrokenBlockedTimes();
                             Reset.ResetNew();
                         }
+
+                        if (averageThr != 0 && totalProdH != 0)
+                        {
+                            averageThr = (averageThr / repetition) / 3600;
+                            throuputs[b2, b3, b4] = averageThr;
+
+                            totalProdH = totalProdH / repetition;
+                            prodPerHour[b2, b3, b4] = totalProdH;
+
+                            //Console.WriteLine("average ThroughPut {0}", averageThr);
+                            //Console.WriteLine("average prod per hour {0}", totalProdH);
+
+                        }
+                        else
+                        {
+                            throuputs[b2, b3, b4] = 0;
+                            prodPerHour[b2, b3, b4] = 0;
+                        }
                     }        
                 }
             }
+
+            Read3DArray(throuputs);
         }
         
 
@@ -406,6 +444,24 @@ namespace Simulation
                 for (int j = 0; j < 200; j++)
                 {
                     Console.Write(multiArray[i, j] + " ");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        public void Read3DArray(double[,,] dimArray)
+        {
+            Console.WriteLine("b2, b3, b4, variable");
+            for (int i = 0; i < buffersize2.Length; i++)
+            {
+                for (int j = 0; j < buffersize3.Length; j++)
+                {
+                    for (int k = 0; k < buffersize4.Length; k++)
+                    {
+                        Console.Write("{0} {1} {2} -> {3}", buffersize2[i], buffersize3[j], buffersize4[k], dimArray[i, j, k]);
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine();
                 }
                 Console.WriteLine();
             }
