@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.IO;
 
 /* Using the C# linked list. Do not use the LinkedList class anymore. The linkedlist is still defined in the 
     public static class. The new method: AddNextNode, RemoveFirst and Display are static method defined in the 
@@ -20,7 +20,7 @@ namespace Simulation
             set
             {
                 double temp = masterTime;
-                if (value >= 0 && value >= temp)
+                if (value >= 0)
                 {
                     masterTime = value;
                 }
@@ -30,7 +30,8 @@ namespace Simulation
 
     public static class SystemState
     {
-        public static Random R = new Random(123);
+        public static int _seed = 0;
+        public static Random R = new Random(_seed);
 
 
         public static Machine1[] machines1;
@@ -41,12 +42,12 @@ namespace Simulation
         public static int totalDVDFinished { get; set; }
         public static double averageThroughputTime { get; set; }
 
-      
-
         public static void updateThroughputTime(double newThroughputTime)
         {
             averageThroughputTime = (((averageThroughputTime * (totalDVDFinished - 1)) + newThroughputTime) / totalDVDFinished);
         }
+
+
     }
 
 
@@ -64,89 +65,95 @@ namespace Simulation
 
     }
 
-
-
     public static class EventList
     {
         public static LinkedList<Event> eventList = new LinkedList<Event>();
     }
 
-           
-
     class Program
     {
+
+        //static StreamWriter write = new StreamWriter(@"C:\Users\Raphael\Documents\_Master\Period_3\Simulations\simulationAssignment\analysis\prodEveryHour_200Buffers.txt");
+
+        int buffersize2 = 200;
+        int buffersize3 = 200;
+        int buffersize4 = 200;
+
+        double endTime = 200 * 3600;
+        double prevEndTime = 0;
         
-        int buffersize2 = 20;
-        int buffersize3 = 20;
-        int buffersize4 = 20;
-
-        double endTime = 1000000;
-
-
    
         static void Main(string[] args)
         {
-
-            Program p = new Program();
-            
-            GeneralTime.MasterTime = 0;
-            
-            p.InitialiseMachines();
-            p.ScheduleEvents();
-
-            
-
-
-            p.Run();
-
-
-            Console.WriteLine();
-            Console.WriteLine();
-
-
-            // set all states to idle to check if you get 100%
-            // without it, we do not have a final state change, which does not allow use to update the time of the previous state.
-            for (int i = 0; i < 4; i++)
+            for (int k = 0; k < 10; k++)
             {
-                SystemState.machines1[i].M1State = MachineState.State.idle;
-                if(i < 2)
+                Program p = new Program();
+                GeneralTime.MasterTime = 0;
+                p.InitialiseMachines();
+                p.ScheduleEvents();
+
+
+                p.Run();
+
+
+
+                // set all states to idle to check if you get 100%
+                // without it, we do not have a final state change, which does not allow use to update the time of the previous state.
+                for (int i = 0; i < 4; i++)
                 {
-                    SystemState.machines2[i].M2State = MachineState.State.idle;
-                    SystemState.machines3[i].M3State = MachineState.State.idle;
-                    SystemState.machines4[i].M4State = MachineState.State.idle;
+                    SystemState.machines1[i].M1State = MachineState.State.idle;
+                    if (i < 2)
+                    {
+                        SystemState.machines2[i].M2State = MachineState.State.idle;
+                        SystemState.machines3[i].M3State = MachineState.State.idle;
+                        SystemState.machines4[i].M4State = MachineState.State.idle;
+                    }
                 }
+
+
+                //p.Analyze();
+
+                //p.IdleBusyBrokenBlockedTimes();
+
+                //Console.WriteLine(SystemState.totalDVDFinished);
+
+                
+                Reset.ResetNew(k + 1); 
+               
             }
 
-
-            p.Analyze();
-
-            p.IdleBusyBrokenBlockedTimes();
-
-
+            //write.Close();
             Console.WriteLine("DONE");
-            
-            
+
             Console.ReadLine();
         }
 
         public void Run()
         {
+            int hours = 0;
+            double prevAmount = 0;
+            double  produced = 0;
+
             while (EventList.eventList.First.Value.Time < endTime)
 	        {
-                //Console.WriteLine("length {0}", EventList.eventList.Count);
-                //Console.WriteLine("master time {0}", GeneralTime.MasterTime);
-                //Program.Display(EventList.eventList, "============");
-                
+                if (GeneralTime.MasterTime > hours * 3600)
+                {
+                    produced = SystemState.totalDVDFinished - prevAmount;
+                    prevAmount += produced;
+                    //write.Write(produced + " ");
+                    //Console.WriteLine("hour {0}.  produced {1}", hours + 1, produced);
+                    hours++;
+                }
+
                 GeneralTime.MasterTime = EventList.eventList.First.Value.Time;
                 Event nextEvent = Program.RemoveFirstNode(EventList.eventList);
-                nextEvent.HandleEvent();  
+                nextEvent.HandleEvent();
             }
+            
         }
 
         public void InitialiseMachines()
         {
-            
-
             SystemState.machines1 = new Machine1[4];
             SystemState.machines2 = new Machine2[2];
             SystemState.machines3 = new Machine3[2];
@@ -348,6 +355,18 @@ namespace Simulation
                 Console.WriteLine("idle time {0}", SystemState.machines4[i].idletime / GeneralTime.MasterTime * 100);
                 Console.WriteLine("busy time {0}", SystemState.machines4[i].busytime / GeneralTime.MasterTime * 100);
                 Console.WriteLine("broken time {0}", SystemState.machines4[i].brokentime / GeneralTime.MasterTime * 100);
+                Console.WriteLine();
+            }
+        }
+
+        public static void ReadFromArray(double[,] multiArray)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 200; j++)
+                {
+                    Console.Write(multiArray[i, j] + " ");
+                }
                 Console.WriteLine();
             }
         }

@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Reset.cs" />
     <Compile Include="BatchM3FinishedEvent.cs" />
     <Compile Include="DvdM1FinishedEvent.cs" />
     <Compile Include="DvdM2FinishedEvent.cs" />

@@ -38,10 +38,10 @@ namespace Simulation
             }
         }
 
-        public double busytime { get { return busyTime; } }
-        public double idletime { get { return idleTime; } }
-        public double brokentime { get { return brokenTime; } }
-        public double blockedtime { get { return blockedTime; } }
+        public double busytime { get { return busyTime; } set { busyTime = value; } }
+        public double idletime { get { return idleTime; } set { idleTime = value; } }
+        public double brokentime { get { return brokenTime; } set { brokenTime = value; } }
+        public double blockedtime { get { return blockedTime; } set { blockedTime = value; } }
 
         public int bufferSize { get; set; }
 
