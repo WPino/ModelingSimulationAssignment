@@ -12,6 +12,7 @@ namespace Simulation
         protected MachineState.State state;
         protected int index;
         public Queue<double> buffer = new Queue<double>();
+        public double lastStateChange { get; set; }
         
         protected double busyTime = 0;
         protected double idleTime = 0;
@@ -76,7 +77,7 @@ namespace Simulation
     public class Machine1 : Machine 
     {   
         private string type = "machine 1";
-        private double lastStateChange = 0;
+        //private double lastStateChange = 0;
 
         // properties checking state and index
         public MachineState.State M1State
@@ -176,7 +177,7 @@ namespace Simulation
     public class Machine2 : Machine
     {
         private string type = "machine 2";
-        private double lastStateChange = 0;
+        //private double lastStateChange = 0;
         public int buffer3InclConveyorContent { get; set; }
 
         public MachineState.State M2State
@@ -305,7 +306,7 @@ namespace Simulation
     public class Machine3 : Machine
     {   
         private string type = "machine 3";
-        private double lastStateChange = 0;
+        //private double lastStateChange = 0;
         public Queue<double> batch = new Queue<double>();
 
         public MachineState.State M3State
@@ -466,7 +467,7 @@ namespace Simulation
     public class Machine4 : Machine
     {
         private string type = "machine 4";
-        private double lastStateChange = 0;
+        //private double lastStateChange = 0;
         public int inkCounter { get; set; }
         public int deviation { get; set; }
 
